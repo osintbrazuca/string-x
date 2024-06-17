@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import sys
 import shlex
@@ -17,7 +18,7 @@ from core.style_console import StyleConsole, RichArgumentParser
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
 __maintainer__ = "Cleiton Pinheiro aka MrCl0wn"
 __credits__ = ["Cleiton Pinheiro"]
-__license__ = "GPL"
+__license__ = "MIT"
 __version__ = "0.1"
 __email__ = "mrcl0wnlab[@]gmail.com"
 __twitter__ = "https://twitter.com/MrCl0wnLab"
@@ -91,17 +92,16 @@ def clear_value(value: str) -> str:
 
 
 def open_file(filename: str):
-    #if filename:
-     print(filename)
-     try:
-         with open(filename, 'r', encoding="utf-8") as file:
-             return file.readlines()
-     except FileNotFoundError:
-         CONSOLE.print_exception(max_frames=20)
-     except PermissionError:
-         CONSOLE.print_exception(max_frames=20)
-     finally:
-         file.close()
+    if filename:
+        try:
+            with open(filename, 'r', encoding="utf-8") as file:
+                return file.readlines()
+        except FileNotFoundError:
+            CONSOLE.print_exception(max_frames=20)
+        except PermissionError:
+            CONSOLE.print_exception(max_frames=20)
+        finally:
+            file.close()
 
 
 
