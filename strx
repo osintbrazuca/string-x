@@ -10,7 +10,7 @@ from typing import Dict, List
 from rich.console import Console
 from rich import print
 from core.thread_process import ThreadProcess
-from core.banner import show
+from core.banner import banner
 from core.style_console import StyleConsole, RichArgumentParser
 
 
@@ -200,7 +200,7 @@ if __name__ == '__main__':
         parser = RichArgumentParser(
             prog='strx',
             formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=60, indent_increment=13),
-            description=show(0),
+            description=banner.show(0),
         )
         parser.add_argument('-list',    '-l',  metavar="file", help="Parâmetro arquivo com strings para excução", default=stdin_get_list())
         parser.add_argument('-str',     '-st', metavar="cmd", help="String template da command shell", default=None, required=True)

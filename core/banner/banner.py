@@ -5,7 +5,7 @@ def show(banner_id: int):
     git_str = "https://github.com/MrCl0wnLab"
     nick_str = 'MrCl0wnLab'
     try:
-        __banner_list = [ f"""[deep_sky_blue1] 
+        __banner_list = [ r"""[deep_sky_blue1] 
                                              _
                                             (T)          _
                                         _         .=.   (R)
@@ -35,9 +35,8 @@ def show(banner_id: int):
                         [deep_sky_blue1]    ░  ░  ░       ░           ░░   ░     ░    ░  [/deep_sky_blue1]
                         [deep_sky_blue1]          ░                    ░         ░    ░  [/deep_sky_blue1]
                         [deep_sky_blue1]          ░                                      [/deep_sky_blue1]
-                                [grey54][+] {git_str}
-                                [+] by {nick_str}[/grey54]""",
-
+                        
+                               [grey54]String-X: Tool for automating commands[/grey54]""",
         rf"""
 
                                                           /^ ^\   .........
