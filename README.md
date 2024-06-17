@@ -7,7 +7,9 @@
 
 <h4 align="center">String-X: Tool for automating commands</h4>
 
+<p align="center">
 Ferramenta de automatização rápida e personalizável desenvolvida para auxiliar analistas em diversas tarefas que dizem respeito à manipulação de strings em linhas de comando (linux).
+</p>
 
 <p align="center">
   <a href="#/"><img src="https://img.shields.io/badge/python-3.12-orange.svg"></a>
