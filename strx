@@ -80,11 +80,6 @@ def remove_duplicate(value_list: list) -> list:
         return file_lines
 
 
-def to_lower(value: str) -> str:
-    if value:
-        return value
-
-
 def open_file(filename: str):
     if filename:
         try:
