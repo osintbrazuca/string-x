@@ -12,7 +12,7 @@ from core.banner import banner
 from core.style_console import StyleConsole, RichArgumentParser
 from core.thread_process import ThreadProcess
 from core.format import Format
-import pprint
+
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
 __maintainer__ = "Cleiton Pinheiro aka MrCl0wn"
 __credits__ = ["Cleiton Pinheiro"]
@@ -74,7 +74,7 @@ def stdin_get_list() -> list:
 
 def remove_duplicate(value_list: list) -> list:
     if value_list:
-        file_lines = [clear_value(line) for line in value_list]
+        file_lines = [Format.clear_value(line) for line in value_list]
         [file_lines.remove(None) for i in range(file_lines.count(None))]
         file_lines = list(set(file_lines))
         return file_lines
@@ -83,11 +83,6 @@ def remove_duplicate(value_list: list) -> list:
 def to_lower(value: str) -> str:
     if value:
         return value
-
-
-def clear_value(value: str) -> str:
-    if value:
-        return Format.clear_value(value)
 
 
 def open_file(filename: str):
