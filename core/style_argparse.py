@@ -4,14 +4,14 @@ from rich.console import Console
 from rich.highlighter import RegexHighlighter
 
 
-class StyleHighlighter(RegexHighlighter):
+class StyleConsole(RegexHighlighter):
     """
         ref:
             https://rich.readthedocs.io/en/stable/appendix/colors.html#appendix-colors
             https://rich.readthedocs.io/en/stable/markup.html#console-markup
             https://rich.readthedocs.io/en/stable/style.html#styles
             https://github.com/Textualize/rich/blob/master/examples/highlighter.py
-    """
+        """
     theme = Theme(
         {
             "sty.param": "deep_sky_blue1",
@@ -19,17 +19,15 @@ class StyleHighlighter(RegexHighlighter):
         }
     )
     base_style = "sty."
-    highlights = [
-        r"(?P<info>\[\!\]\s[\w-].*+$)",
-        r"(?P<param>[-\w].*+)"
-    ]
+    highlights = [r"(?P<info>\[\!\]\s[\w-].*+$)", r"(?P<param>[-\w].*+)"]
 
 
 class RichArgumentParser(argparse.ArgumentParser):
     def _print_message(self, message, file=None):
         if message:
-            obj_style_console = StyleConsole()
-            return obj_style_console.console.print(message)
+            style_theme = StyleConsole()
+            console = Console(color_system="truecolor", highlighter=_style_theme, theme=_style_theme.theme)
+            return console.print(message)
 
     def _add_argument(self, *args, **kwargs):
         group = super().add_argument(*args, **kwargs)
@@ -50,13 +48,3 @@ class RawDescriptionHelpFormatter(argparse.RawDescriptionHelpFormatter):
         if text:
             help_list = [f"[bold red]{line}[/bold red]" for line in text.splitlines()]
             return help_list
-
-
-class StyleConsole(RegexHighlighter):
-    def __init__(self):
-        self.console_highlighter = StyleHighlighter()
-        self.console = Console(
-            highlighter=self.console_highlighter,
-            theme=self.console_highlighter.theme,
-            log_path=False
-        )
