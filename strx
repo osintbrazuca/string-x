@@ -72,14 +72,6 @@ def stdin_get_list() -> list:
         CONFIG_STYLE.console.print_exception(max_frames=3)
 
 
-def remove_duplicate(value_list: list) -> list:
-    if value_list:
-        file_lines = [Format.clear_value(line) for line in value_list]
-        [file_lines.remove(None) for i in range(file_lines.count(None))]
-        file_lines = list(set(file_lines))
-        return file_lines
-
-
 def open_file(filename: str):
     if filename:
         try:
