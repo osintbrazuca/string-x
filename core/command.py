@@ -36,7 +36,10 @@ class Command:
                         if line_std:
                             line_std = Format.clear_value(line_std)
                             logging.info(line_std)
-                            (self.__cli.console.log(line_std) if self.verbose else self.__cli.console.print(line_std))
+                            if self.verbose:
+                                self.__cli.console.log(line_std)
+                            else:
+                                self.__cli.console.print(line_std)
             except subprocess.SubprocessError:
                 self.__cli.console.print_exception(max_frames=3)
 
