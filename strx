@@ -1,18 +1,18 @@
 #!/usr/bin/python
 import sys
 import os
-import argparse
 import logging
 import select
 import shlex
 import subprocess
 from datetime import datetime
 from rich.console import Console
+from core.filelocal import FileLocal
 from core.banner import banner
-from core.style_console import StyleConsole, RichArgumentParser
+from core.style_console import StyleConsole, RichArgumentParser, RawDescriptionHelpFormatter
 from core.thread_process import ThreadProcess
 from core.format import Format
-import pprint
+
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
 __maintainer__ = "Cleiton Pinheiro aka MrCl0wn"
 __credits__ = ["Cleiton Pinheiro"]
@@ -22,7 +22,7 @@ __email__ = "mrcl0wnlab[@]gmail.com"
 __twitter__ = "https://twitter.com/MrCl0wnLab"
 __git__ = [
     "https://github.com/MrCl0wnLab",
-    "https://github.com/osintbrazuca/"
+    "https://github.com/osintbrazuca"
 ]
 
 
@@ -72,35 +72,11 @@ def stdin_get_list() -> list:
         CONFIG_STYLE.console.print_exception(max_frames=3)
 
 
-def remove_duplicate(value_list: list) -> list:
-    if value_list:
-        file_lines = [clear_value(line) for line in value_list]
-        [file_lines.remove(None) for i in range(file_lines.count(None))]
-        file_lines = list(set(file_lines))
-        return file_lines
-
-
-def to_lower(value: str) -> str:
-    if value:
-        return value
-
-
-def clear_value(value: str) -> str:
-    if value:
-        return Format.clear_value(value)
-
-
-def open_file(filename: str):
+def open_file(filename: str) -> list[str]:
     if filename:
-        try:
-            with open(filename, 'r', encoding="utf-8") as file:
-                return file.readlines()
-        except FileNotFoundError:
-            CONFIG_STYLE.console.print_exception(max_frames=3)
-        except PermissionError:
-            CONFIG_STYLE.console.print_exception(max_frames=3)
-        finally:
-            file.close()
+        txt_line, _ = CONFIG_FILE.open_file(filename, 'r')
+        if txt_line:
+            return txt_line
 
 
 def verbose(value: str) -> None:
@@ -143,10 +119,11 @@ def exec_command(command_str: str) -> None:
                         console = Console(
                             theme=CONFIG_STYLE.console_highlighter.theme,
                             log_path=False,
-                            color_system='truecolor'
+                            color_system='truecolor',
+                            highlight=True,
                         )
                         logging.info(line_std)
-                        (console.log(line_std) if ARGS.verbose else CONFIG_STYLE.console.print(line_std))
+                        (CONFIG_STYLE.console.log(line_std) if ARGS.verbose else CONFIG_STYLE.console.print(line_std))
         except subprocess.SubprocessError:
             CONFIG_STYLE.console.print_exception(max_frames=3)
 
@@ -178,36 +155,33 @@ def main(target_str_list: list, template_str: str) -> None:
                         _function_name=command_template,
                         _command_str=template_str,
                         _target_list=target_str_list,
-                        _mix=None
+                        _mix=None,
                     )
-                except FutureWarning:
+                except Exception:
                     CONFIG_STYLE.console.print_exception(max_frames=3)
         except BrokenPipeError:
             CONFIG_STYLE.console.print_exception(max_frames=3)
 
 
 if __name__ == '__main__':
+    CONFIG_FILE = FileLocal()
     CONFIG_STYLE = StyleConsole()
     CONFIG_THREAD = ThreadProcess()
     CONFIG_THREAD_MAX = 50
     CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
 
-
     try:
         parser = RichArgumentParser(
             prog="strx",
-            formatter_class=lambda prog: argparse.RawDescriptionHelpFormatter(prog, max_help_position=60,
-                                                                              indent_increment=13),
-            description=banner.show(0),
+            formatter_class=lambda prog: RawDescriptionHelpFormatter(
+                prog, max_help_position=60,
+                indent_increment=13),
+                description=banner.show(0),
         )
-        parser.add_argument('-list', '-l', metavar="file", help="Parâmetro arquivo com strings para excução",
-                            default=stdin_get_list())
-        parser.add_argument('-str', '-st', metavar="cmd", help="String template da command shell", default=None,
-                            required=True)
-        parser.add_argument('-out', '-o', metavar="file", help="Arquivo onde será salvo os valores",
-                            default=f'output-{CONFIG_TIME}.txt')
-        parser.add_argument('-skip', '-s', metavar="path",
-                            help="String que o processo vai pular. Ex: -s string ou --skip string")
+        parser.add_argument('-list', '-l', metavar="file", help="Parâmetro arquivo com strings para excução", default=stdin_get_list())
+        parser.add_argument('-str', '-st', metavar="cmd", help="String template da command shell", default=None, required=True)
+        parser.add_argument('-out', '-o', metavar="file", help="Arquivo onde será salvo os valores", default=f'output-{CONFIG_TIME}.txt')
+        parser.add_argument('-skip', '-s', metavar="path", help="String que o processo vai pular. Ex: -s string ou --skip string")
         parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando será executado depois de um pipe |")
         parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true')
         parser.add_argument('-thread', '-t', metavar="<50>", help="Quantidade de threads", default=CONFIG_THREAD_MAX)

@@ -28,8 +28,8 @@ class FileLocal:
             except IOError:
                 self.__style_cli.console.print_exception(max_frames=3)
 
-    @staticmethod
-    def open_fileCsv(filename: str, mode: str):
+
+    def open_fileCsv(self, filename: str, mode: str):
         if filename and mode:
             try:
                 data_file = open(filename, mode)

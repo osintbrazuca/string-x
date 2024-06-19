@@ -14,14 +14,18 @@ class StyleHighlighter(RegexHighlighter):
     """
     theme = Theme(
         {
-            "sty.param": "deep_sky_blue1",
-            "sty.info": "bold deep_sky_blue1",
+            "sty.param":    "bright_yellow",
+            "sty.info":     "bright_yellow",
+            "sty.string":   "bright_magenta",
+            "sty.strx":     "bright_magenta",
         }
     )
     base_style = "sty."
     highlights = [
-        r"(?P<info>\[\!\]\s[\w-].*+$)",
-        r"(?P<param>[-\w].*+)"
+        r"(?P<info>\[\!\] [\w:].*+)",
+        r"(?P<param>[\-\w].*)",
+        r"(?P<string>\{.*\})",
+        r"(?P<strx>strx)"
     ]
 
 
@@ -48,7 +52,7 @@ class RichArgumentParser(argparse.ArgumentParser):
 class RawDescriptionHelpFormatter(argparse.RawDescriptionHelpFormatter):
     def _split_lines(self, text: str, width):
         if text:
-            help_list = [f"[bold red]{line}[/bold red]" for line in text.splitlines()]
+            help_list = [f"[bright_white]{line}[/bright_white]" for line in text.splitlines()]
             return help_list
 
 
@@ -56,7 +60,10 @@ class StyleConsole(RegexHighlighter):
     def __init__(self):
         self.console_highlighter = StyleHighlighter()
         self.console = Console(
-            highlighter=self.console_highlighter,
+            # TODO:
+            # Verificar melhor formato de highlighter
+            #   highlighter=self.console_highlighter, 
             theme=self.console_highlighter.theme,
-            log_path=False
+            log_path=False,
+            height=True
         )
