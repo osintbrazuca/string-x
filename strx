@@ -8,8 +8,9 @@ import subprocess
 from datetime import datetime
 from rich.console import Console
 from core.filelocal import FileLocal
+from core.command import Command
 from core.banner import banner
-from core.style_console import StyleConsole, RichArgumentParser, RawDescriptionHelpFormatter
+from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
 from core.thread_process import ThreadProcess
 from core.format import Format
 
@@ -79,62 +80,13 @@ def open_file(filename: str) -> list[str]:
             return txt_line
 
 
-def exec_command(command_str: str) -> None:
-    if command_str:
-        try:
-            cmd_shlex = shlex.split(f'{command_str}')
-            rest_spn = subprocess.Popen(
-                cmd_shlex,
-                stdout=subprocess.PIPE,
-                encoding='utf-8'
-            )
-            if ARGS.pipe:
-                try:
-                    cmd_shlex_pipe = shlex.split(ARGS.pipe)
-                    rest_spn = subprocess.Popen(
-                        cmd_shlex_pipe,
-                        stdin=rest_spn.stdout,
-                        stdout=subprocess.PIPE,
-                        encoding='utf-8'
-                    )
-                    CONFIG_CLI.verbose(f"[!] PIPE: {ARGS.pipe}", ARGS.verbose)
-                except subprocess.SubprocessError:
-                    CONFIG_CLI.console.print_exception(max_frames=3)
-            if rest_spn.stdout:
-                for line_std in rest_spn.stdout:
-                    if line_std:
-                        line_std = Format.clear_value(line_std)
-                        logging.info(line_std)
-                        (CONFIG_CLI.console.log(line_std) if ARGS.verbose else CONFIG_CLI.console.print(line_std))
-        except subprocess.SubprocessError:
-            CONFIG_CLI.console.print_exception(max_frames=3)
-
-
-def command_prepare(target_str: str, command_str: str) -> str:
-    if target_str and command_str:
-        target_str = Format.clear_value(target_str)
-        command_target_str = command_str.replace(r'{STRING}', target_str)
-        return command_target_str
-
-
-def command_template(target_str: str, command_str: str, _mix):
-    if target_str and command_str:
-        try:
-            command_target_str = command_prepare(target_str, command_str)
-            CONFIG_CLI.verbose(f"[!] TEMPLATE: {command_str}", ARGS.verbose)
-            CONFIG_CLI.verbose(f"[!] COMMAND: {command_target_str}", ARGS.verbose)
-            return exec_command(command_target_str)
-        except FutureWarning:
-            CONFIG_CLI.console.print_exception(max_frames=3)
-
-
 def main(target_str_list: list, template_str: str) -> None:
     if target_str_list and template_str:
         try:
             if list is type(target_str_list):
                 try:
                     CONFIG_THREAD.exec_thread(
-                        _function_name=command_template,
+                        _function_name=CONFIG_COMMAND.command_template,
                         _command_str=template_str,
                         _target_list=target_str_list,
                         _mix=None,
@@ -147,10 +99,11 @@ def main(target_str_list: list, template_str: str) -> None:
 
 if __name__ == '__main__':
     CONFIG_FILE = FileLocal()
-    CONFIG_CLI = StyleConsole()
+    CONFIG_CLI = StyleCli()
     CONFIG_THREAD = ThreadProcess()
     CONFIG_THREAD_MAX = 50
     CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
+    CONFIG_COMMAND = Command()
 
     try:
         parser = RichArgumentParser(
@@ -169,12 +122,14 @@ if __name__ == '__main__':
         parser.add_argument('-thread', '-t', metavar="<50>", help="Quantidade de threads", default=CONFIG_THREAD_MAX)
 
         ARGS = parser.parse_args()
-
+   
         if ARGS.thread:
             CONFIG_THREAD.max_thread = int(ARGS.thread)
 
         if ARGS.list:
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
+            CONFIG_COMMAND.verbose = ARGS.verbose
+            CONFIG_COMMAND.pipe = ARGS.pipe
         else:
             CONFIG_CLI.console.print(f' strx: error: the following arguments are required: -l/--list')
             CONFIG_CLI.console.print(f' strx: use pipes: cat list.txt | main.py -str ../testes/\n')
@@ -188,6 +143,7 @@ if __name__ == '__main__':
             datefmt='%H:%M:%S',
         )
         logging.getLogger()
+
         try:
             main(
                 target_str_list=target_list,
