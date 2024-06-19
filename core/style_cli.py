@@ -45,8 +45,8 @@ class StyleHighlighter(RegexHighlighter):
 class RichArgumentParser(argparse.ArgumentParser):
     def _print_message(self, message, file=None):
         if message:
-            obj_style_console = StyleConsole()
-            return obj_style_console.console.print(message)
+            obj_cli = StyleCli()
+            return obj_cli.console.print(message)
 
     def _add_argument(self, *args, **kwargs):
         group = super().add_argument(*args, **kwargs)
@@ -69,7 +69,7 @@ class RawDescriptionHelpFormatter(argparse.RawDescriptionHelpFormatter):
             return help_list
 
 
-class StyleConsole(RegexHighlighter):
+class StyleCli(RegexHighlighter):
     def __init__(self):
         self.console_highlighter = StyleHighlighter()
         self.console = Console(

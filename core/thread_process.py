@@ -1,14 +1,14 @@
 import time
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from core.style_console import StyleConsole
+from core.style_cli import StyleCli
 
 
 class ThreadProcess:
     def __init__(self):
         self.max_thread = 50
-        self.__time_sleep = 0
-        self.__style_cli = StyleConsole()
+        self.__sleep = 0
+        self.__cli = StyleCli()
 
     def exec_thread(self, _function_name, _command_str, _target_list, _mix):
         if _function_name and _command_str and _target_list:
@@ -17,7 +17,7 @@ class ThreadProcess:
                 for tgt_str in _target_list:
                     if tgt_str:
                         while threading.active_count() > self.max_thread:
-                            time.sleep(self.__time_sleep)
+                            time.sleep(self.__sleep)
                         thread = threading.Thread(
                             target=_function_name, args=(
                                 tgt_str, _command_str, _mix,)
@@ -27,7 +27,7 @@ class ThreadProcess:
                 for thread in list_threads:
                     thread.join()
             except FutureWarning:
-                self.__style_cli.console.print_exception(max_frames=3)
+                self.__cli.console.print_exception(max_frames=3)
 
     def main_pool_thread(self, _function_name, _target, _command, _exploit: list):
         return self.setting_main_pool_thread(_function_name, [_target], [_command], [_exploit])
@@ -39,5 +39,4 @@ class ThreadProcess:
             executor.shutdown(wait=True)
             executor.shutdown()
         except Exception as err:
-            print(err)
-            pass
+            self.__cli.console.print_exception(max_frames=3)
