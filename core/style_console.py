@@ -15,17 +15,30 @@ class StyleHighlighter(RegexHighlighter):
     theme = Theme(
         {
             "sty.param":    "bright_yellow",
-            "sty.info":     "bright_yellow",
+            "sty.info":     "bold yellow1",
+            "sty.label":    "yellow3",
             "sty.string":   "bright_magenta",
             "sty.strx":     "bright_magenta",
+            "sty.domain":   "bright_black",
+            "sty.url":      "cyan1",
+            "sty.ipv4":     "bright_green",
+            "sty.ipv6":     "spring_green3",
+            "sty.error":    "bright_red",
+
         }
     )
+    
     base_style = "sty."
     highlights = [
-        r"(?P<info>\[\!\] [\w:].*+)",
-        r"(?P<param>[\-\w].*)",
-        r"(?P<string>\{.*\})",
-        r"(?P<strx>strx)"
+        r"(?P<error>(error|not found|timed out))",
+        r"(?P<info>\[\!\])",
+        r"(?P<label>(TEMPLATE|COMMAND|PIPE):)",
+        r"(?P<string>(\{.*\}))",
+        r"(?P<strx>strx)",
+        r"(?P<domain>(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])",
+        r"(?P<url>(/^http[s]?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/))",
+        r"(?P<ipv6>([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)$)",
+        r"(?P<ipv4>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))",
     ]
 
 
@@ -62,8 +75,21 @@ class StyleConsole(RegexHighlighter):
         self.console = Console(
             # TODO:
             # Verificar melhor formato de highlighter
-            #   highlighter=self.console_highlighter, 
+            highlighter=self.console_highlighter, 
             theme=self.console_highlighter.theme,
             log_path=False,
-            height=True
+            highlight=True
         )
+
+    def verbose(self, value: str, verbose:bool):
+        if value:
+            _console = Console(
+                    highlighter=self.console_highlighter, 
+                    theme=self.console_highlighter.theme,
+                    log_path=False,
+                    highlight=True
+                )
+            if verbose is True:
+                return _console.log(value)
+
+
