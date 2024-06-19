@@ -65,11 +65,11 @@ def stdin_get_list() -> list:
             return None
         return None
     except KeyboardInterrupt:
-        CONFIG_STYLE.console.print_exception(max_frames=3)
+        CONFIG_CLI.console.print_exception(max_frames=3)
     except NameError:
-        CONFIG_STYLE.console.print_exception(max_frames=3)
+        CONFIG_CLI.console.print_exception(max_frames=3)
     except IOError:
-        CONFIG_STYLE.console.print_exception(max_frames=3)
+        CONFIG_CLI.console.print_exception(max_frames=3)
 
 
 def open_file(filename: str) -> list[str]:
@@ -77,18 +77,6 @@ def open_file(filename: str) -> list[str]:
         txt_line, _ = CONFIG_FILE.open_file(filename, 'r')
         if txt_line:
             return txt_line
-
-
-def verbose(value: str) -> None:
-    if value:
-        console = Console(
-            highlighter=CONFIG_STYLE.console_highlighter,
-            theme=CONFIG_STYLE.console_highlighter.theme,
-            log_path=False,
-            highlight=True
-        )
-        if ARGS.verbose and value:
-            console.log(value)
 
 
 def exec_command(command_str: str) -> None:
@@ -109,23 +97,17 @@ def exec_command(command_str: str) -> None:
                         stdout=subprocess.PIPE,
                         encoding='utf-8'
                     )
-                    verbose(f"[!] PIPE: {ARGS.pipe}")
+                    CONFIG_CLI.verbose(f"[!] PIPE: {ARGS.pipe}", ARGS.verbose)
                 except subprocess.SubprocessError:
-                    CONFIG_STYLE.console.print_exception(max_frames=3)
+                    CONFIG_CLI.console.print_exception(max_frames=3)
             if rest_spn.stdout:
                 for line_std in rest_spn.stdout:
                     if line_std:
                         line_std = Format.clear_value(line_std)
-                        console = Console(
-                            theme=CONFIG_STYLE.console_highlighter.theme,
-                            log_path=False,
-                            color_system='truecolor',
-                            highlight=True,
-                        )
                         logging.info(line_std)
-                        (CONFIG_STYLE.console.log(line_std) if ARGS.verbose else CONFIG_STYLE.console.print(line_std))
+                        (CONFIG_CLI.console.log(line_std) if ARGS.verbose else CONFIG_CLI.console.print(line_std))
         except subprocess.SubprocessError:
-            CONFIG_STYLE.console.print_exception(max_frames=3)
+            CONFIG_CLI.console.print_exception(max_frames=3)
 
 
 def command_prepare(target_str: str, command_str: str) -> str:
@@ -139,11 +121,11 @@ def command_template(target_str: str, command_str: str, _mix):
     if target_str and command_str:
         try:
             command_target_str = command_prepare(target_str, command_str)
-            verbose(f"[!] TEMPLATE: {command_str}")
-            verbose(f"[!] COMMAND: {command_target_str}")
+            CONFIG_CLI.verbose(f"[!] TEMPLATE: {command_str}", ARGS.verbose)
+            CONFIG_CLI.verbose(f"[!] COMMAND: {command_target_str}", ARGS.verbose)
             return exec_command(command_target_str)
         except FutureWarning:
-            CONFIG_STYLE.console.print_exception(max_frames=3)
+            CONFIG_CLI.console.print_exception(max_frames=3)
 
 
 def main(target_str_list: list, template_str: str) -> None:
@@ -158,14 +140,14 @@ def main(target_str_list: list, template_str: str) -> None:
                         _mix=None,
                     )
                 except Exception:
-                    CONFIG_STYLE.console.print_exception(max_frames=3)
+                    CONFIG_CLI.console.print_exception(max_frames=3)
         except BrokenPipeError:
-            CONFIG_STYLE.console.print_exception(max_frames=3)
+            CONFIG_CLI.console.print_exception(max_frames=3)
 
 
 if __name__ == '__main__':
     CONFIG_FILE = FileLocal()
-    CONFIG_STYLE = StyleConsole()
+    CONFIG_CLI = StyleConsole()
     CONFIG_THREAD = ThreadProcess()
     CONFIG_THREAD_MAX = 50
     CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
@@ -183,7 +165,7 @@ if __name__ == '__main__':
         parser.add_argument('-out', '-o', metavar="file", help="Arquivo onde será salvo os valores", default=f'output-{CONFIG_TIME}.txt')
         parser.add_argument('-skip', '-s', metavar="path", help="String que o processo vai pular. Ex: -s string ou --skip string")
         parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando será executado depois de um pipe |")
-        parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true')
+        parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true',  default=False)
         parser.add_argument('-thread', '-t', metavar="<50>", help="Quantidade de threads", default=CONFIG_THREAD_MAX)
 
         ARGS = parser.parse_args()
@@ -194,8 +176,8 @@ if __name__ == '__main__':
         if ARGS.list:
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
         else:
-            CONFIG_STYLE.console.print(f' strx: error: the following arguments are required: -l/--list')
-            CONFIG_STYLE.console.print(f' strx: use pipes: cat list.txt | main.py -str ../testes/\n')
+            CONFIG_CLI.console.print(f' strx: error: the following arguments are required: -l/--list')
+            CONFIG_CLI.console.print(f' strx: use pipes: cat list.txt | main.py -str ../testes/\n')
             exit(parser.parse_args('-h'))
 
         logging.basicConfig(
@@ -214,6 +196,6 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             pass
     except SystemError:
-        CONFIG_STYLE.console.print_exception(max_frames=3)
+        CONFIG_CLI.console.print_exception(max_frames=3)
     except ModuleNotFoundError:
-        CONFIG_STYLE.console.print_exception(max_frames=3)
+        CONFIG_CLI.console.print_exception(max_frames=3)
