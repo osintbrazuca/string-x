@@ -3,16 +3,12 @@ import sys
 import os
 import logging
 import select
-import shlex
-import subprocess
 from datetime import datetime
-from rich.console import Console
 from core.filelocal import FileLocal
 from core.command import Command
-from core.banner import banner
+from core.banner.asciiart import AsciiBanner
 from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
 from core.thread_process import ThreadProcess
-from core.format import Format
 
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
 __maintainer__ = "Cleiton Pinheiro aka MrCl0wn"
@@ -104,6 +100,7 @@ if __name__ == '__main__':
     CONFIG_THREAD_MAX = 50
     CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
     CONFIG_COMMAND = Command()
+    CONFIG_BANNER = AsciiBanner()
 
     try:
         parser = RichArgumentParser(
@@ -111,7 +108,7 @@ if __name__ == '__main__':
             formatter_class=lambda prog: RawDescriptionHelpFormatter(
                 prog, max_help_position=60,
                 indent_increment=13),
-                description=banner.show(0),
+                description=CONFIG_BANNER.show('strx'),
         )
         parser.add_argument('-list', '-l', metavar="file", help="Parâmetro arquivo com strings para excução", default=stdin_get_list())
         parser.add_argument('-str', '-st', metavar="cmd", help="String template da command shell", default=None, required=True)
