@@ -28,5 +28,5 @@
                         [deep_sky_blue1]    ░  ░  ░       ░           ░░   ░     ░    ░  [/deep_sky_blue1]
                         [deep_sky_blue1]          ░                    ░         ░    ░  [/deep_sky_blue1]
                         [deep_sky_blue1]          ░                                      [/deep_sky_blue1]
-                                [grey54][+] {git_str}
-                                [+] by {nick_str}[/grey54]
+                                
+                                [grey54]String-X: Tool for automating commands[/grey54]
