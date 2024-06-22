@@ -13,5 +13,4 @@
                        ▄█    ███     ███       ███    ███  ▄███     ███▄
                      ▄████████▀     ▄████▀     ███    ███ ████       ███▄
 
-                   {git_str}
-                   by {nick_str}
+                           String-X: Tool for automating commands
