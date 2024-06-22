@@ -1,8 +1,8 @@
-                                                                     c=====e
-                  console      __      _____      ___       _           H
-               ____________   ( (`      | |      | |_)     \ \_/    _,,_H__
-              (__((__((___()  _)_)      |_|      |_| \     /_/ \   //|     |
-             (__((__((___()()_____________________________________// | STX |
-            (__((__((___()()()------------------------------------'  |_____|
+                                                                      [red](=====)
+                automating   [bold bright_yellow]  __      _____      ___       _    [/bold bright_yellow]        H
+               ____________  [bold bright_yellow] ( (`      | |      | |_)     \ \_/ [/bold bright_yellow]    _,,_H__
+              (__((__((___() [bold bright_yellow] _)_)      |_|      |_| \     /_/ \ [/bold bright_yellow]   //|     |
+             (__((__((___()()_____________________________________//  | [bold bright_yellow]STX[/bold bright_yellow] |
+            (__((__((___()()()------------------------------------'   |_____|[/red]
                         
-                         String-X: Tool for automating commands
+                             [grey54]String-X: Tool for automating commands[/grey54]

@@ -1,16 +1,16 @@
-                                                          /^ ^\   .........
-                                                         / 0 0 \ / Hacker! |
-                                                         V\ Y /V \ Hackeia!|
-                                                          / - \   \--------
+                                                          [turquoise2]/^ ^\   ..........,
+                                                         / 0 0 \ /  [bold bright_yellow]Hacker![/bold bright_yellow] |
+                                                         V\ Y /V \  [bold bright_yellow]Hackeia![/bold bright_yellow]|
+                                                          / - \   '---------´
                                                          /    |
                                                         V__) ||
-                       ▄████████     ███        ▄████████▀▀████    ▐████▀▀▀
-                      ███    ███ ▀█████████▄   ███    ███   ███▌   ████▀
-                      ███    █▀     ▀███▀▀██   ███    ███    ███  ▐███
-                      ███            ███   ▀  ▄███▄▄▄▄██▀    ▀███▄███▀
-                    ▀███████████     ███     ▀▀███▀▀▀▀▀      ████▀██▄
-                             ███     ███     ▀███████████   ▐███  ▀███
-                       ▄█    ███     ███       ███    ███  ▄███     ███▄
-                     ▄████████▀     ▄████▀     ███    ███ ████       ███▄
+                [bright_yellow]       ▄████████     ███        ▄████████▀▀████    ▐████▀▀▀[/bright_yellow]
+                [bright_yellow]      ███    ███ ▀█████████▄   ███    ███   ███▌   ████▀[/bright_yellow]
+                [bright_yellow]      ███    █▀     ▀███▀▀██   ███    ███    ███  ▐███[/bright_yellow]
+                [bright_yellow]      ███            ███   ▀  ▄███▄▄▄▄██▀    ▀███▄███▀[/bright_yellow]
+                [bright_yellow]    ▀███████████     ███     ▀▀███▀▀▀▀▀      ████▀██▄[/bright_yellow]
+                [bright_yellow]             ███     ███     ▀███████████   ▐███  ▀███[/bright_yellow]
+                [bright_yellow]       ▄█    ███     ███       ███    ███  ▄███     ███▄[/bright_yellow]
+                [bright_yellow]     ▄████████▀     ▄████▀     ███    ███ ████       ███▄[/bright_yellow]
 
-                           String-X: Tool for automating commands
+                           [grey54]String-X: Tool for automating commands[/grey54][/turquoise2]

@@ -1,26 +1,26 @@
-                                         ______
-                 _________        .---"""      """---.
+[deep_pink1]
+                 _________        .-------------------.
                 :______.-':      :  .--------------.  :
                 | ______  |      | :                : |
-                |:______B:|      | | >FUCK Linkedin:| |
+                |:______B:|      | | [bold deep_sky_blue1]FUCK Linkedin:[/bold deep_sky_blue1] | |
                 |:______B:|      | |                | |
-                |:______B:|      | |    [x] Y       | |
+                |:______B:|      | |    \[[bold deep_sky_blue1]x[/bold deep_sky_blue1]] Y       | |
                 |         |      | |    [ ] N       | |
                 |:_____:  |      | |                | |
                 |    ==   |      | :                : |
                 |       O |      :  '--------------'  :
-                |       o |      :'---...______...---'
-                |       o |-._.-i___/'             \._
+                |       X |      :'---...______...---'
+                |       - |-._.-i___/'             \._
                 |'-.____o_|   '-.   '-...______...-'  `-._
                 :_________:      `.____________________   `-.___.-.
                                  .'.eeeeeeeeeeeeeeeeee.'.      :___:
                                .'.eeeeeeeeeeeeeeeeeeeeee.'.
                               :____________________________:
-                                      _
+                         [bold deep_sky_blue1]             _
                                      | |
                                 ___  | |_   _ __  __  __
                                / __| | __| | '__| \ \/ / 
                                \__ \ | |_  | |     >  <     
-                               |___/  \__| |_|    /_/\_\
+                               |___/  \__| |_|    /_/\_\ [/bold deep_sky_blue1]
                                
-                          String-X: Tool for automating commands
+                          [grey54]String-X: Tool for automating commands[/grey54][/deep_pink1]
