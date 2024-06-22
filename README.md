@@ -122,14 +122,13 @@ usage: strx [-h] [-list file] -str cmd [-out file] [-skip path] [-pipe cmd] [-ve
 
 options:
              -h, --help             show this help message and exit
-             -list file, -l file    Parâmetro arquivo com strings para excução
-             -str cmd, -st cmd      String template da command shell
+             -list file, -l file    Arquivo com strings para execução
+             -str cmd, -st cmd      String template de command shell
              -out file, -o file     Arquivo onde será salvo os valores
              -skip path, -s path    String que o processo vai pular. Ex: -s string ou --skip string
-             -pipe cmd, -p cmd      Comando que será executado depois de um pipe |
+             -pipe cmd, -p cmd      Comando para executar depois de um pipe |
              -verbose, -v           Modo verboso
              -thread <50>, -t <50>  Quantidade de threads
-
 ```
 
 ### EXEMPLO DE COMANDOS
