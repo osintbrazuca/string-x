@@ -1,9 +1,9 @@
                                      _nnnn_
-                                    dGGGGMMb     ,................................
+                                    dGGGGMMb     ,...............................................
                                    @p~qp~~qMb    | > StrX: Linux is life!
-                                   M|@||@) M|   _; {git_str}
-                                   @,----.JM| -' | by {nick_str}
-                                  JS^\__/  qKL    \,..............................'
+                                   M|@||@) M|   _; > String-X: Tool for automating commands
+                                   @,----.JM| -' \,..............................................
+                                  JS^\__/  qKL    
                                  dZP        qKRb
                                 dZP          qKKb
                                fZP            SMMb
