@@ -10,7 +10,7 @@ class ThreadProcess:
         self.__sleep = 0
         self.__cli = StyleCli()
 
-    def exec_thread(self, _function_name, _command_str, _target_list, _mix):
+    def exec_thread(self, _function_name, _command_str, _target_list, _pipe):
         if _function_name and _command_str and _target_list:
             try:
                 list_threads = []
@@ -20,7 +20,7 @@ class ThreadProcess:
                             time.sleep(self.__sleep)
                         thread = threading.Thread(
                             target=_function_name, args=(
-                                tgt_str, _command_str, _mix,)
+                                tgt_str, _command_str, _pipe,)
                         )
                         list_threads.append(thread)
                         thread.start()
