@@ -166,7 +166,7 @@ curl -s 'https://raw.githubusercontent.com/Zaczero/pihole-phishtank/main/hosts.t
 
 É aceito o pipe via parâmetro da ferramenta, ele é executado usando o resultado do comando ```-str / -st```.
 
-> **Nota:** Não recomendo usar o ```|``` (pipe) diretamente nos parâmetros da ferramenta, uma vez que a lib python não tem suporte. ainda é possivel usar ```|``` (pipe) normalmente na saída.
+> **Nota:** Não recomendo usar o ```|``` (pipe) diretamente nos parâmetros da ferramenta, uma vez que a lib python não tem suporte. ainda é possível usar ```|``` (pipe) normalmente na saída.
 
 ```bash
 -p '{COMMAND}' / -pipe '{COMMAND}'
@@ -177,6 +177,13 @@ cat host.txt  | ./strx -str 'host {STRING}' -p 'grep -Eo "[[:digit:]]{1,3}\.[[:d
 cat sql.txt   | ./strx -str 'curl -skL https://TARGET/{STRING}' -pipe 'grep "SQL syntax;"'
 cat phish.txt | ./strx -str 'python /tools/priv8.py -t "{STRING}"' -pipe 'grep "VULN"' | create_report
 cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' https://{STRING}"  -p "grep -o -E 'CODE:.(.*)|IP:.(.*)'" -t 30 
+```
+
+**PIPE x {STRING}**
+
+É possível usar a string reservada ```{STRING}``` dentro do contexto de ```-p / -pipe```.
+```bash
+./strx -l list.txt -str 'echo {STRING}' -p 'touch {STRING}.txt'
 ```
 
 ### TERMINAL  OUTPUT
