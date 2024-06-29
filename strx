@@ -85,7 +85,7 @@ def main(target_str_list: list, template_str: str) -> None:
                         _function_name=CONFIG_COMMAND.command_template,
                         _command_str=template_str,
                         _target_list=target_str_list,
-                        _mix=None,
+                        _pipe=ARGS.pipe,
                     )
                 except Exception:
                     CONFIG_CLI.console.print_exception(max_frames=3)
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         parser.add_argument('-str', '-st', metavar="cmd", help="String template de command shell", default=None, required=True)
         parser.add_argument('-out', '-o', metavar="file", help="Arquivo onde será salvo os valores", default=f'output-{CONFIG_TIME}.txt')
         parser.add_argument('-skip', '-s', metavar="path", help="String que o processo vai pular. Ex: -s string ou --skip string")
-        parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando para executar depois de um pipe |")
+        parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando será executado depois de um pipe |",default=None)
         parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true',  default=False)
         parser.add_argument('-thread', '-t', metavar="<50>", help="Quantidade de threads", default=CONFIG_THREAD_MAX)
 
@@ -126,7 +126,6 @@ if __name__ == '__main__':
         if ARGS.list:
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
             CONFIG_COMMAND.verbose = ARGS.verbose
-            CONFIG_COMMAND.pipe = ARGS.pipe
         else:
             CONFIG_CLI.console.print(f' strx: error: the following arguments are required: -l/--list')
             CONFIG_CLI.console.print(f' strx: use pipes: cat list.txt | main.py -str ../testes/\n')
