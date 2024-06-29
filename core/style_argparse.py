@@ -26,7 +26,7 @@ class RichArgumentParser(argparse.ArgumentParser):
     def _print_message(self, message, file=None):
         if message:
             style_theme = StyleConsole()
-            console = Console(color_system="truecolor", highlighter=_style_theme, theme=_style_theme.theme)
+            console = Console(color_system="truecolor", highlighter=style_theme, theme=style_theme.theme)
             return console.print(message)
 
     def _add_argument(self, *args, **kwargs):
