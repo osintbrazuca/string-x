@@ -24,12 +24,14 @@ class StyleHighlighter(RegexHighlighter):
             "sty.ipv4":     "bright_green",
             "sty.ipv6":     "spring_green3",
             "sty.error":    "bright_red",
+            "sty.func":     "blue_violet",
 
         }
     )
     
     base_style = "sty."
     highlights = [
+        r"(?P<func>((md5|sha256|decode64|encode64|sha1|hex|decodehex)\((.*?)\)))",
         r"(?P<error>(error|not found|timed out))",
         r"(?P<info>\[\!\])",
         r"(?P<label>(TEMPLATE|COMMAND|PIPE):)",
@@ -39,6 +41,7 @@ class StyleHighlighter(RegexHighlighter):
         r"(?P<url>(/^http[s]?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/))",
         r"(?P<ipv6>([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)$)",
         r"(?P<ipv4>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))",
+        
     ]
 
 
