@@ -185,7 +185,7 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 ./strx -l list.txt -str 'echo {STRING}' -p 'touch {STRING}.txt'
 ```
 
-**FUNÇÕES x {STRING}**
+## FUNÇÕES
 
 É possível usar strings reservadas do tipo **função** que aceitam parâmetros.
  palavras reservadas: ```clear, base64, debase64, sha1, sha256, hex, dehex, md5``` são identificadas como funções dentro do contexto de ```-str / -st``` e ```-p / -pipe```.
