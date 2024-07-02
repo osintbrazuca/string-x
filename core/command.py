@@ -2,10 +2,12 @@ import shlex
 import logging
 import subprocess
 from core.format import Format
+from core.func_format import FuncFormat
 from core.style_cli import StyleCli
 
 class Command:
     def __init__(self):
+        self.__format_func = FuncFormat()
         self.__cli = StyleCli()
         self._pipe: str = str
         self.verbose: bool = False
@@ -46,6 +48,7 @@ class Command:
         if target_str and command_str:
             target_str = Format.clear_value(target_str)
             command_target_str = command_str.replace(r'{STRING}', target_str)
+            command_target_str = self.__format_func.func_format(command_target_str)
             return command_target_str
         
     def command_template(self, target_str: str, command_str: str, pipe_str: str):
