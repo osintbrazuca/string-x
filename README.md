@@ -192,9 +192,9 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 
 ```bash
 ./strx -l list.txt -str 'echo "{STRING}; md5({STRING}); sha256({STRING})"'
-./strx -l pass.txt -str './brute -user admin -pass md5({STRING})"'
+./strx -l pass.txt -str './brute -user admin -pass md5({STRING})'
 ```
-> **Nota:** É possivel adicionar funções personalizadas via arquvivo [**utils/functions.py**](./utils/functions.py)  
+> **Nota:** É possivel adicionar funções personalizadas via arquivo [**utils/functions.py**](./utils/functions.py)  
 
 
 ### TERMINAL  OUTPUT
