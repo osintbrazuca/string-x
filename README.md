@@ -87,8 +87,9 @@ RESULTADO
 Isso exibirá ajuda para a ferramenta. Aqui estão todos os opções que ele suporta.
 
 ```bash
-usage: strx [-h] [-list file] -str cmd [-out file] [-skip path] [-pipe cmd] [-verbose] [-thread <50>]
+usage: strx [-h] [-list file] -str cmd [-out file] [-skip path] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of]
 
+ 
                                              _
                                             (T)          _
                                         _         .=.   (R)
@@ -118,17 +119,21 @@ usage: strx [-h] [-list file] -str cmd [-out file] [-skip path] [-pipe cmd] [-ve
                             ░  ░  ░       ░           ░░   ░     ░    ░  
                                   ░                    ░         ░    ░  
                                   ░                                      
+                                
                                 String-X: Tool for automating commands
 
 options:
              -h, --help             show this help message and exit
              -list file, -l file    Arquivo com strings para execução
-             -str cmd, -st cmd      String template de command shell
-             -out file, -o file     Arquivo onde será salvo os valores
+             -str cmd, -st cmd      String template de comando
+             -out file, -o file     Arquivo output de valores da execução shell
              -skip path, -s path    String que o processo vai pular. Ex: -s string ou --skip string
-             -pipe cmd, -p cmd      Comando para executar depois de um pipe |
+             -pipe cmd, -p cmd      Comando que será executado depois de um pipe |
              -verbose, -v           Modo verboso
-             -thread <50>, -t <50>  Quantidade de threads
+             -thread <10>, -t <10>  Quantidade de threads
+             -pf                    Mostrar resultados da execução de função
+             -of                    Habilitar output de valores da execução de função
+
 ```
 
 ### EXEMPLO DE COMANDOS
@@ -188,14 +193,32 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 ## FUNÇÕES
 
 É possível usar strings reservadas do tipo **função** que aceitam parâmetros.
- palavras reservadas: ```clear, base64, debase64, sha1, sha256, hex, dehex, md5``` são identificadas como funções dentro do contexto de ```-str / -st``` e ```-p / -pipe```.
+ palavras reservadas: ```clear, base64, debase64, sha1, sha256, hex, dehex, md5, str_rand, int_rand``` são identificadas como funções dentro do contexto de ```-str / -st``` e ```-p / -pipe```.
 
+| FUNÇÃO | DESCRIÇÃO | PARÂMETRO |
+|  ----  |  ----  |  :----:  |
+|  clear  |  remove  \t\n\r e espaços direta e esquerda |  str  |
+|  base64  |  converte valor em Base64 |  str  |
+|  debase64  |  reverte valor de Base64  |  str  |
+|  sha1  |  retorna hash  |  str  |
+|  sha256  |   retorna hash    |  str  |
+|  md5  |   retorna hash    |  str  |
+|  hex  |  retorna hexadecimal  |  str  |
+|  dehex  |  reverte valor hexadecimal  |  str  |
+|  str_rand  |  valores string randômicos  |  int  |
+|  int_rand  |  valores int randômicos  |  int  |
+
+
+### -pf / -op
+- -pf Mostrar resultados da execução de função (o shell é ignorado)
+- -of Habilitar output de valores da execução de função (salvar valores em arquivo)
 ```bash
-./strx -l list.txt -str 'echo "{STRING}; md5({STRING}); sha256({STRING})"'
-./strx -l pass.txt -str './brute -user admin -pass md5({STRING})'
+./strx -l domains.txt -str '{STRING}; md5({STRING}); sha256({STRING})' -pf
+./strx -l domains.txt -str 'https://{STRING}/index.php?id=int_rand(3)' -pf
 ```
 > **Nota:** É possivel adicionar funções personalizadas via arquivo [**utils/functions.py**](./utils/functions.py)  
 
+---
 
 ### TERMINAL  OUTPUT
 

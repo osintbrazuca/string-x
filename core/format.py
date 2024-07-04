@@ -10,7 +10,7 @@ class Format:
     @staticmethod
     def clear_value(value: str) -> str:
         if value:
-            value = value.rstrip()
+            value = value.strip()
             value = re.sub(r'[\t\n\r]', '', value)
             return value
         return str()
