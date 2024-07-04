@@ -5,7 +5,7 @@ from core.style_cli import StyleCli
 
 class FileLocal:
     def __init__(self):
-        self.__cli = StyleCli()
+        self._cli = StyleCli()
         self.file_skipe = None
 
     def open_file(self, filename: str, mode: str):
@@ -15,11 +15,11 @@ class FileLocal:
                 txt_line = (data_return.readlines())
                 return txt_line, data_return
             except FileNotFoundError:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
             except PermissionError:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
             except Exception:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
             finally:
                 data_return.close()
 
@@ -30,7 +30,7 @@ class FileLocal:
                 data_return.writelines(value)
                 data_return.close()
             except IOError:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
 
     def open_file_csv(self, filename: str, mode: str):
         if filename and mode:
@@ -42,7 +42,7 @@ class FileLocal:
                 csv_line = data_file
                 return csv_line, data_return
             except IOError:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
 
     def list_file_dir(self, dir_str: str) -> dict[list[str], list[str] | str]:
         dir_list: list = []
@@ -60,4 +60,4 @@ class FileLocal:
                             file_list.append(dir_file)
                 return {'dirs': dir_list, 'files': file_list}
             except Exception:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
