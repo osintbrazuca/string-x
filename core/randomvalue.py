@@ -63,17 +63,17 @@ class RandomValue:
 
 
     @staticmethod
-    def get_string_random(len_int) -> str:
+    def get_str_rand(len_int) -> str:
         if len_int:
-            str_list = ','.join(str(string.ascii_uppercase+string.digits)).split(',')
-            random.shuffle(str_list)
-            rand_str = ','.join(map(str, str_list)).replace(",", "")
+            len_int = int(len_int)
+            rand_str = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(len_int))
             return rand_str
         
 
     @staticmethod
-    def get_int_random(len_int) -> str:
+    def get_int_rand(len_int) -> str:
         if len_int:
-            numb_list = [random.randrange(len_int) for x in range(len_int)]
-            numb_str = ','.join(map(str, numb_list)).replace(",", "")
-            return numb_str
+            len_int = int(len_int)
+            numb_list = [random.randrange(len_int) for _ in range(len_int)]
+            rand_str = ','.join(map(str, numb_list)).replace(",", "")
+            return rand_str
