@@ -41,15 +41,14 @@ class StyleHighlighter(RegexHighlighter):
         r"(?P<url>(/^http[s]?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/))",
         r"(?P<ipv6>([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)$)",
         r"(?P<ipv4>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))",
-        
     ]
 
 
 class RichArgumentParser(argparse.ArgumentParser):
     def _print_message(self, message, file=None):
         if message:
-            obj_cli = StyleCli()
-            return obj_cli.console.print(message)
+            cli = StyleCli()
+            return cli.console.print(message)
 
     def _add_argument(self, *args, **kwargs):
         group = super().add_argument(*args, **kwargs)
@@ -76,23 +75,21 @@ class StyleCli(RegexHighlighter):
     def __init__(self):
         self.console_highlighter = StyleHighlighter()
         self.console = Console(
-            # TODO:
-            # Verificar melhor formato de highlighter
             highlighter=self.console_highlighter, 
             theme=self.console_highlighter.theme,
             log_path=False,
             highlight=True
         )
 
-    def verbose(self, value: str, verbose:bool):
+    def verbose(self, value: str, verbose: bool):
         if value:
-            _console = Console(
+            console = Console(
                     highlighter=self.console_highlighter, 
                     theme=self.console_highlighter.theme,
                     log_path=False,
                     highlight=True
                 )
             if verbose is True:
-                return _console.log(value)
+                return console.log(value)
 
 
