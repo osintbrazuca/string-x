@@ -6,37 +6,37 @@ from core.style_cli import StyleCli
 
 class ThreadProcess:
     def __init__(self):
-        self.max_thread = 50
-        self.__sleep = 0
-        self.__cli = StyleCli()
+        self.max_thread = 10
+        self._sleep = 0
+        self._cli = StyleCli()
 
-    def exec_thread(self, _function_name, _command_str, _target_list, _pipe):
-        if _function_name and _command_str and _target_list:
+    def exec_thread(self, function_name, command_str, target_list, argparse):
+        if function_name and command_str and target_list:
             try:
                 list_threads = []
-                for tgt_str in _target_list:
+                for tgt_str in target_list:
                     if tgt_str:
                         while threading.active_count() > self.max_thread:
-                            time.sleep(self.__sleep)
+                            time.sleep(self._sleep)
                         thread = threading.Thread(
-                            target=_function_name, args=(
-                                tgt_str, _command_str, _pipe,)
+                            target=function_name, args=(
+                                tgt_str, command_str, argparse,)
                         )
                         list_threads.append(thread)
                         thread.start()
                 for thread in list_threads:
                     thread.join()
             except FutureWarning:
-                self.__cli.console.print_exception(max_frames=3)
+                self._cli.console.print_exception(max_frames=3)
 
-    def main_pool_thread(self, _function_name, _target, _command, _exploit: list):
-        return self.setting_main_pool_thread(_function_name, [_target], [_command], [_exploit])
+    def main_pool_thread(self, function_name, target, command, exploit: list):
+        return self.setting_main_pool_thread(function_name, [target], [command], [exploit])
 
-    def setting_main_pool_thread(self, _function_name, _target, _command, _exploit: list):
+    def setting_main_pool_thread(self, function_name, target, command, exploit: list):
         try:
-            executor = ThreadPoolExecutor(max_workers=self.max_conection)
-            executor.map(_function_name, _target, _command, _exploit)
+            executor = ThreadPoolExecutor(max_workers=self.max_thread)
+            executor.map(function_name, target, command, exploit)
             executor.shutdown(wait=True)
             executor.shutdown()
         except Exception as err:
-            self.__cli.console.print_exception(max_frames=3)
+            self._cli.console.print_exception(max_frames=3)
