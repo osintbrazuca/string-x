@@ -1,3 +1,4 @@
+import socket
 from core.format import Format
 from core.randomvalue import RandomValue
 
@@ -62,3 +63,12 @@ class Funcs:
         if len_int:
             return str(RandomValue.get_int_rand(len_int))
         return str()
+
+    @staticmethod
+    def ip(host: str) -> str:
+        if host:
+            try:
+                return socket.gethostbyname(host)
+            except socket.gaierror:
+                pass
+        return str()    
