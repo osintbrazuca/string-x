@@ -71,4 +71,12 @@ class Funcs:
                 return socket.gethostbyname(host)
             except socket.gaierror:
                 pass
-        return str()    
+        return str()
+
+    @staticmethod
+    def replace(value: str) -> str:
+        if value:
+            old, new, cmd = value.split(',')
+            if old and new and cmd: 
+                return cmd.replace(old, new)
+        return str()      
