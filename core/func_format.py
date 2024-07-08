@@ -36,9 +36,11 @@ class FuncFormat:
                     if func_detect and value_func:
                         self.is_func = True
                         cmd_str = cmd_str.replace(
-                            func_detect,
-                            self._find_func(func_detect,value_func)
+                            str(func_detect),
+                            str(self._find_func(func_detect,value_func))
                         )
-            return cmd_str
+            if cmd_str:            
+                return cmd_str
+        return str()
     
 

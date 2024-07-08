@@ -66,3 +66,12 @@ class Format:
         if value:
             return yaml.load(value, yaml.SafeLoader)
         return None
+
+    @staticmethod
+    def regex(value: str, regex: str) -> str:
+        if value:
+            re_result =  re.findall(regex, value, re.IGNORECASE)
+            if re_result:
+                return re_result
+        return str()    
+

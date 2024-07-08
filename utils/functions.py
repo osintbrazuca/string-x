@@ -1,8 +1,11 @@
 import socket
+from core.request import Request
 from core.format import Format
 from core.randomvalue import RandomValue
 
 class Funcs:
+    def __init__(self):
+        ...
 
     @staticmethod
     def clear(value: str) -> str:
@@ -79,4 +82,16 @@ class Funcs:
             old, new, cmd = value.split(',')
             if old and new and cmd: 
                 return cmd.replace(old, new)
-        return str()      
+        return str() 
+        
+    @staticmethod
+    def get(url: str) -> str:
+        if url.startswith('https://') or url.startswith('http://'):
+            request = Request()
+            try:
+                result = request.get(url)
+                if result:
+                    return result
+            except Exception:
+                pass
+        return str()   

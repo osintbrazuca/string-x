@@ -208,7 +208,7 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 |  int_rand  |  valores int randômicos  |  int  |
 |  ip  |  retorna ip de um host  |  str  |
 |  replace  |  substitui valores  |  str  |
-
+|  get  |  envia um request get  |  str  |
 
 ### -pf / -op
 - -pf Mostrar resultados da execução de função (o shell é ignorado)
@@ -218,6 +218,7 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 ./strx -l domains.txt -str 'https://{STRING}/index.php?id=int_rand(3)' -pf
 ./strx -l urls.txt -str 'curl  replace(http:,https:,{STRING})' 
 ./strx -l hosts.txt -str '{STRING}; ip({STRING})' -pf
+./strx -l hosts.txt -str '{STRING}; get(https://{STRING})' -pf
 ```
 > **Nota:** É possivel adicionar funções personalizadas via arquivo [**utils/functions.py**](./utils/functions.py)  
 
