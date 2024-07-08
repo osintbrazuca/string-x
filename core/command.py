@@ -38,6 +38,8 @@ class Command:
                         self._cli.console.print_exception(max_frames=3)
                     except FileNotFoundError:
                         pass
+                    except ValueError:
+                        pass
                 if result_command.stdout:
                     for line_std in result_command.stdout:
                         if line_std:
@@ -51,6 +53,8 @@ class Command:
                 self._cli.console.print_exception(max_frames=3)
             except FileNotFoundError:
                 pass
+            except ValueError:
+                pass
 
     def _format_function(self, command:str) -> str:
         command_func: str = str()
@@ -58,10 +62,10 @@ class Command:
             command_func = self._format_func.func_format(command)
             if self._print_func:
                 if self.verbose:
-                    self._cli.console.log(command_func)
+                    if command_func: self._cli.console.log(command_func)
                 else:
-                    self._cli.console.print(command_func)
-            if self._output_func: logging.info(command_func)
+                     if command_func: self._cli.console.print(command_func)
+            if self._output_func and command_func: logging.info(command_func)
         return command_func
 
     def _command_prepare(self, target: str, command: str) -> str:
@@ -69,8 +73,9 @@ class Command:
             target = Format.clear_value(target)
             command_target = command.replace(r'{STRING}', target)
             command_target = self._format_function(command_target)
-            return command_target
-        return None
+            if command_target:
+                return command_target
+        return str()
 
     def command_template(self, target: str, command: str, args: argparse.Namespace):
         if target and command:
