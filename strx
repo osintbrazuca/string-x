@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 import os
-import logging.config
+import signal
 import select
 from datetime import datetime
 from core.filelocal import FileLocal
@@ -47,6 +47,9 @@ __git__ = [
 #   - Funções de manipulação:
 #       Ex: md5(str), hex(str), replace(str,str)
 
+def signal_handler(signal, frame):
+    CONFIG_CLI.console.log(" [!] Saindo...")
+    sys.exit(0)
 
 def stdin_get_list() -> list:
     """
@@ -68,7 +71,6 @@ def stdin_get_list() -> list:
     except IOError:
         CONFIG_CLI.console.print_exception(max_frames=3)
 
-
 def open_file(filename: str) -> list[str]:
     if filename:
         try:
@@ -77,7 +79,6 @@ def open_file(filename: str) -> list[str]:
                 return txt_line
         except Exception:
             pass
-
 
 def main(target_str_list: list, template_str: str) -> None:
     if target_str_list and template_str:
@@ -97,12 +98,12 @@ def main(target_str_list: list, template_str: str) -> None:
 
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, signal_handler)
     CONFIG_CLI = StyleCli()
     CONFIG_FILE = FileLocal()
     CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
     CONFIG_THREAD = ThreadProcess()
     CONFIG_BANNER = AsciiBanner()
-    CONFIG_COMMAND = Command()
     CONFIG_THREAD_MAX = 10
     CONFIG_FILE_OUTPUT = f'output-{CONFIG_TIME}.txt'
 
@@ -125,6 +126,7 @@ if __name__ == '__main__':
         parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
 
         ARGS = parser.parse_args()
+        CONFIG_COMMAND = Command(file_output=ARGS.out)
 
         if ARGS.thread:
             CONFIG_THREAD.max_thread = int(ARGS.thread)
@@ -135,43 +137,6 @@ if __name__ == '__main__':
         else:
             CONFIG_CLI.console.print(f"{CONFIG_BANNER.show('strx')}\n")
             exit(parser.parse_args('-h'))
-
-        logging.basicConfig(
-            level=logging.NOTSET,
-            filename=str(ARGS.out),
-            filemode='a',
-            format='%(message)s',
-        )
-
-        LOGGING_CONFIG = {
-            "version": 1,
-            "handlers": {
-                "default": {
-                    "class": "logging.StreamHandler",
-                    "formatter": "http",
-                    "stream": "ext://sys.stderr"
-                }
-            },
-            "formatters": {
-                "http": {
-                    "format": "%(levelname)s [%(asctime)s] %(name)s - %(message)s",
-                    "datefmt": "%Y-%m-%d %H:%M",
-                }
-            },
-            'loggers': {
-                'httpx': {
-                    'handlers': ['default'],
-                    'level': 'CRITICAL',
-                },
-                'httpcore': {
-                    'handlers': ['default'],
-                    'level': 'CRITICAL',
-                },
-            }
-        }
-
-        logging.config.dictConfig(LOGGING_CONFIG)
-        logging.getLogger()
 
         main(
             target_str_list=target_list,
