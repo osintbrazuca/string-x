@@ -20,8 +20,6 @@ class FileLocal:
                 self._cli.console.print_exception(max_frames=3)
             except Exception:
                 self._cli.console.print_exception(max_frames=3)
-            finally:
-                data_return.close()
 
     def save_value(self, value: str, file: str):
         if value and file:
@@ -29,7 +27,7 @@ class FileLocal:
                 _, data_return = self.open_file(file, 'a+')
                 data_return.writelines(value)
                 data_return.close()
-            except IOError:
+            except Exception as e:
                 self._cli.console.print_exception(max_frames=3)
 
     def open_file_csv(self, filename: str, mode: str):
