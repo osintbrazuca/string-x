@@ -71,9 +71,12 @@ def stdin_get_list() -> list:
 
 def open_file(filename: str) -> list[str]:
     if filename:
-        txt_line, _ = CONFIG_FILE.open_file(filename, 'r')
-        if txt_line:
-            return txt_line
+        try:
+            txt_line, _ = CONFIG_FILE.open_file(filename, 'r')
+            if txt_line:
+                return txt_line
+        except Exception:
+            pass
 
 
 def main(target_str_list: list, template_str: str) -> None:
@@ -170,13 +173,12 @@ if __name__ == '__main__':
         logging.config.dictConfig(LOGGING_CONFIG)
         logging.getLogger()
 
-        try:
-            main(
-                target_str_list=target_list,
-                template_str=ARGS.str
-            )
-        except KeyboardInterrupt:
-            pass
+        main(
+            target_str_list=target_list,
+            template_str=ARGS.str
+        )
+    except KeyboardInterrupt:
+        pass
     except SystemError:
         CONFIG_CLI.console.print_exception(max_frames=3)
     except ModuleNotFoundError:
