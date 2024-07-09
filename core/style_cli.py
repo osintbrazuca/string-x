@@ -25,13 +25,11 @@ class StyleHighlighter(RegexHighlighter):
             "sty.ipv6":     "spring_green3",
             "sty.error":    "bright_red",
             "sty.func":     "blue_violet",
-
         }
     )
     
     base_style = "sty."
     highlights = [
-        r"(?P<func>((md5|sha256|decode64|encode64|sha1|hex|decodehex)\((.*?)\)))",
         r"(?P<error>(error|not found|timed out))",
         r"(?P<info>\[\!\])",
         r"(?P<label>(TEMPLATE|COMMAND|PIPE):)",
@@ -41,6 +39,7 @@ class StyleHighlighter(RegexHighlighter):
         r"(?P<url>(/^http[s]?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/))",
         r"(?P<ipv6>([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)$)",
         r"(?P<ipv4>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))",
+        r"(?P<func>((clear|base64|debase64|sha1|sha256|md5|hex|dehex|str_rand|int_rand|ip|replace|get)\((.*?)\)))",
     ]
 
 
@@ -78,18 +77,12 @@ class StyleCli(RegexHighlighter):
             highlighter=self.console_highlighter, 
             theme=self.console_highlighter.theme,
             log_path=False,
-            highlight=True
+            highlight=True,
+            log_time_format='[%f] %Y-%m-%d,%H:%M:%S'
         )
 
     def verbose(self, value: str, verbose: bool):
-        if value:
-            console = Console(
-                    highlighter=self.console_highlighter, 
-                    theme=self.console_highlighter.theme,
-                    log_path=False,
-                    highlight=True
-                )
-            if verbose is True:
-                return console.log(value)
+        if value and verbose is True:
+            return self.console.log(value)
 
 
