@@ -7,6 +7,7 @@ class Request:
     def _get_title(html: str) -> str:
         if html:
             title = Format.clear_value(Format.regex(html, r'<title[^>]*>([^<]+)</title>')[0])
+            title = title.replace("'", "")
             if title:
                 return title
         return str()
