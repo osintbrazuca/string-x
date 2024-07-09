@@ -26,8 +26,8 @@ class ThreadProcess:
                         thread.start()
                 for thread in list_threads:
                     thread.join()
-            except FutureWarning:
-                self._cli.console.print_exception(max_frames=3)
+            except Exception:
+                pass
 
     def main_pool_thread(self, function_name, target, command, exploit: list):
         return self.setting_main_pool_thread(function_name, [target], [command], [exploit])
@@ -38,5 +38,5 @@ class ThreadProcess:
             executor.map(function_name, target, command, exploit)
             executor.shutdown(wait=True)
             executor.shutdown()
-        except Exception as err:
-            self._cli.console.print_exception(max_frames=3)
+        except Exception:
+            pass
