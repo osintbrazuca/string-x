@@ -1,19 +1,60 @@
 import shlex
-import logging
+import logging.config
 import argparse
 import subprocess
 from core.format import Format
 from core.func_format import FuncFormat
 from core.style_cli import StyleCli
+from core.filelocal import FileLocal
 
 class Command:
-    def __init__(self):
+    def __init__(self, file_output: str):
+        self._file = FileLocal()
         self._format_func = FuncFormat()
         self._cli = StyleCli()
         self._print_func: bool = False
         self._output_func: bool = False
         self.verbose: bool = False
-    
+        self.file_output: str = file_output
+        self._logging_config = {
+            "version": 1,
+            "handlers": {
+                "default": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "http",
+                    "stream": "ext://sys.stderr"
+                }
+            },
+            "formatters": {
+                "http": {
+                    "format": "%(levelname)s [%(asctime)s] %(name)s - %(message)s",
+                    "datefmt": "%Y-%m-%d %H:%M",
+                }
+            },
+            'loggers': {
+                'httpx': {
+                    'handlers': ['default'],
+                    'level': 'CRITICAL',
+                },
+                'httpcore': {
+                    'handlers': ['default'],
+                    'level': 'CRITICAL',
+                },
+            }
+        }
+        self._set_logging()
+
+    def _set_logging(self):
+        logging.basicConfig(
+            format='%(message)s',
+        )
+        logging.config.dictConfig(self._logging_config)
+        logging.getLogger()
+
+    def _save_command_log(self, value: str) -> None:
+        if value:
+            self._file.save_value(f"{value}\n", self.file_output)
+
     def _shlex(self, command: str) -> list[str]:
         if command:
             return shlex.split(f"{command}")
@@ -34,8 +75,9 @@ class Command:
                             stdout=subprocess.PIPE,
                             encoding='utf-8'
                         )
-                    except FileNotFoundError:
-                        pass
+                    except FileNotFoundError as e:
+                        if not self._print_func:
+                            self._cli.console.print(e)
                     except ValueError:
                          pass
 
@@ -43,12 +85,14 @@ class Command:
                     for line_std in result_command.stdout:
                         if line_std:
                             line_std = Format.clear_value(line_std)
-                            logging.info(line_std)
+                            self._save_command_log(line_std)
                             if self.verbose:
                                 self._cli.console.log(line_std)
                             else:
                                 self._cli.console.print(line_std)
-            except FileNotFoundError:
+            except FileNotFoundError as e:
+                if not self._print_func:
+                    self._cli.console.print(e)
                 pass
             except ValueError:
                 pass
@@ -63,7 +107,8 @@ class Command:
                         if command_func: self._cli.console.log(command_func)
                     else:
                         if command_func: self._cli.console.print(command_func)
-                if self._output_func and command_func: logging.info(command_func)
+                if self._output_func and command_func: 
+                    self._save_command_log(command_func)
             return command_func
         except Exception:
             pass
