@@ -222,8 +222,14 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 ./strx -l hosts.txt -str '{STRING}; ip({STRING})' -pf
 ./strx -l hosts.txt -str '{STRING}; get(https://{STRING})' -pf
 ```
-> **Nota:** É possivel adicionar funções personalizadas via arquivo [**utils/functions.py**](./utils/functions.py)  
+> **Nota:** É possivel adicionar funções personalizadas via arquivo [**utils/functions.py**](./utils/functions.py)
 
+## IF
+Filtrar valores para execução de comando, é usado o parâmetro ```-if / -ifvalue```.
+```bash
+./strx -l domains.txt -str 'curl {STRING};' -if .gov.br
+./strx -l url.txt -str 'curl {STRING};' -if https
+```
 ---
 
 ### TERMINAL  OUTPUT

@@ -14,6 +14,7 @@ class Command:
         self._cli = StyleCli()
         self._print_func: bool = False
         self._output_func: bool = False
+        self._if_value: str = str()
         self.verbose: bool = False
         self.file_output: str = file_output
         self._logging_config = {
@@ -116,7 +117,6 @@ class Command:
     def _command_prepare(self, target: str, command: str) -> str:
         try:
             if target and command:
-                target = Format.clear_value(target)
                 command_target = command.replace(r'{STRING}', target)
                 command_target = self._format_function(command_target)
                 if command_target:
@@ -127,15 +127,24 @@ class Command:
 
     def command_template(self, target: str, command: str, args: argparse.Namespace):
         if target and command:
+            target = Format.clear_value(target)
             self._print_func = args.pf
             self._output_func = args.of
+            self._if_value = args.ifvalue
+            
+            if self._if_value:
+                if self._if_value not in target:
+                    return self._cli.verbose(f"[X] IF VALUE: {target}", self.verbose)
+                elif self._if_value in target:
+                    self._cli.verbose(f"[!] IF VALUE: {target}", self.verbose) 
+
             try:
-                command_target = self._command_prepare(target, command)
-                command_pipe = self._command_prepare(target, args.pipe)
-                if command: self._cli.verbose(f"[!] TEMPLATE: {command}", self.verbose)
-                if command_target: self._cli.verbose(f"[!] COMMAND: {command_target}", self.verbose)
-                if command_pipe: self._cli.verbose(f"[!] PIPE: {command_pipe}", self.verbose)
-                return self._exec_command(command_target, command_pipe)
+                    command_target = self._command_prepare(target, command)
+                    command_pipe = self._command_prepare(target, args.pipe)
+                    if command: self._cli.verbose(f"[!] TEMPLATE: {command}", self.verbose)
+                    if command_target: self._cli.verbose(f"[!] COMMAND: {command_target}", self.verbose)
+                    if command_pipe: self._cli.verbose(f"[!] PIPE: {command_pipe}", self.verbose)
+                    return self._exec_command(command_target, command_pipe)
             except Exception:
                 pass
              
