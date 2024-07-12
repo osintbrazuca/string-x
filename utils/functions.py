@@ -94,4 +94,22 @@ class Funcs:
                     return result
             except Exception:
                 pass
-        return str()   
+        return str() 
+    
+    @staticmethod
+    def urlencode(url: str) -> str:
+        if url:
+           encode = Format.parse_urlencode(url)
+           if encode:
+               return encode
+        return str()
+    
+    @staticmethod
+    def rev(value: str) -> str:
+        if value:
+            value_rev = value[::-1]
+            if value_rev:
+                return value_rev
+        return str()
+           
+    
