@@ -1,4 +1,5 @@
 from random import Random
+import urllib.parse
 import re
 import base64
 import hashlib
@@ -73,5 +74,13 @@ class Format:
             re_result =  re.findall(regex, value, re.IGNORECASE)
             if re_result:
                 return re_result
-        return str()    
+        return str()
+
+    @staticmethod
+    def parse_urlencode(url: str) -> str:
+        if url:
+            encode =  urllib.parse.urlencode(url)
+            if encode:
+                return encode
+        return str()     
 
