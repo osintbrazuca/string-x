@@ -124,6 +124,7 @@ if __name__ == '__main__':
         parser.add_argument('-thread', '-t', metavar=f"<{CONFIG_THREAD_MAX}>", help="Quantidade de threads", default=CONFIG_THREAD_MAX)
         parser.add_argument('-pf', help="Mostrar resultados da execução de função", action='store_true', default=False)
         parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
+        parser.add_argument('-ifvalue', '-if', metavar="value", help="Valor para filtro strings de execução", default=None, required=False)
 
         ARGS = parser.parse_args()
         CONFIG_COMMAND = Command(file_output=ARGS.out)
