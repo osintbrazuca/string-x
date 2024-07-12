@@ -51,6 +51,7 @@ def signal_handler(signal, frame):
     CONFIG_CLI.console.log(" [!] Saindo...")
     sys.exit(0)
 
+
 def stdin_get_list() -> list:
     """
         ref:
@@ -71,6 +72,7 @@ def stdin_get_list() -> list:
     except IOError:
         CONFIG_CLI.console.print_exception(max_frames=3)
 
+
 def open_file(filename: str) -> list[str]:
     if filename:
         try:
@@ -79,6 +81,7 @@ def open_file(filename: str) -> list[str]:
                 return txt_line
         except Exception:
             pass
+
 
 def main(target_str_list: list, template_str: str) -> None:
     if target_str_list and template_str:
@@ -113,17 +116,24 @@ if __name__ == '__main__':
             formatter_class=lambda prog: RawDescriptionHelpFormatter(
                 prog, max_help_position=60,
                 indent_increment=13),
-                description=CONFIG_BANNER.show('strx'),
+            description=CONFIG_BANNER.show('strx'),
         )
-        parser.add_argument('-list', '-l', metavar="file", help="Arquivo com strings para execução", default=stdin_get_list())
-        parser.add_argument('-str', '-st', metavar="cmd", help="String template de comando", default=None, required=True)
-        parser.add_argument('-out', '-o', metavar="file", help="Arquivo output de valores da execução shell", default=CONFIG_FILE_OUTPUT)
-        parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando que será executado depois de um pipe |",default=None)
-        parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true',  default=False)
-        parser.add_argument('-thread', '-t', metavar=f"<{CONFIG_THREAD_MAX}>", help="Quantidade de threads", default=CONFIG_THREAD_MAX)
+        parser.add_argument('-list', '-l', metavar="file", help="Arquivo com strings para execução",
+                            default=stdin_get_list())
+        parser.add_argument('-str', '-st', metavar="cmd", help="String template de comando", default=None,
+                            required=True)
+        parser.add_argument('-out', '-o', metavar="file", help="Arquivo output de valores da execução shell",
+                            default=CONFIG_FILE_OUTPUT)
+        parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando que será executado depois de um pipe |",
+                            default=None)
+        parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true', default=False)
+        parser.add_argument('-thread', '-t', metavar=f"<{CONFIG_THREAD_MAX}>", help="Quantidade de threads",
+                            default=CONFIG_THREAD_MAX)
         parser.add_argument('-pf', help="Mostrar resultados da execução de função", action='store_true', default=False)
-        parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
-        parser.add_argument('-ifvalue', '-if', metavar="value", help="Valor para filtro strings de execução", default=None, required=False)
+        parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true',
+                            default=False)
+        parser.add_argument('-ifvalue', '-if', metavar="value", help="Valor para filtro strings de execução",
+                            default=None, required=False)
 
         ARGS = parser.parse_args()
         CONFIG_COMMAND = Command(file_output=ARGS.out)
@@ -135,7 +145,7 @@ if __name__ == '__main__':
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
             CONFIG_COMMAND.verbose = ARGS.verbose
         else:
-            CONFIG_CLI.console.print(f"{CONFIG_BANNER.show('strx')}\n")
+            CONFIG_CLI.console.print(f"{CONFIG_BANNER.show_random()}\n")
             exit(parser.parse_args('-h'))
 
         main(
