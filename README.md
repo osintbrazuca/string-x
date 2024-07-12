@@ -209,6 +209,8 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 |  ip  |  retorna ip de um host  |  str  |
 |  replace  |  substitui valores  |  str  |
 |  get  |  envia um request get  |  str  |
+|  urlencode  |  Encode de url  |  str  |
+|  rev  |  String reversa  |  str  |
 
 ### -pf / -op
 - -pf Mostrar resultados da execução de função (o shell é ignorado)
