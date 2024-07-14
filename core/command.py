@@ -9,7 +9,7 @@ from core.filelocal import FileLocal
 
 
 class Command:
-    def __init__(self, file_output: str):
+    def __init__(self,):
         self._file = FileLocal()
         self._format_func = FuncFormat()
         self._cli = StyleCli()
@@ -17,8 +17,9 @@ class Command:
         self._output_func: bool = False
         self._if_value: str = str()
         self.verbose: bool = False
-        self.file_output: str = file_output
-        self.last_log: str = str()
+        self.file_output: str = str()
+        self.file_last_output: str = str()
+        self.last_value: str = str()
         self._logging_config = {
             "version": 1,
             "handlers": {
@@ -60,11 +61,8 @@ class Command:
 
     def _save_last_target(self, value: str) -> None:
         if value:
-            #x = open('teste.log', mode='w')
-            #x.write(value)
-            self.last_log = value
-            #self._file.save_value(f"{value}\n", file='teste.log', mode='w')
-            pass
+            self.last_value = value
+            self._file.save_last_value(f"{value}\n", file=self.file_last_output)
 
     @staticmethod
     def _shlex(command: str) -> list[str]:
@@ -138,8 +136,8 @@ class Command:
 
     def command_template(self, target: str, command: str, args: argparse.Namespace):
         if target and command:
-            self._save_last_target(target)
             target = Format.clear_value(target)
+            self._save_last_target(target)
             self._print_func = args.pf
             self._output_func = args.of
             self._if_value = args.ifvalue
