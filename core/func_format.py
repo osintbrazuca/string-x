@@ -1,6 +1,6 @@
 
 import re
-from utils.functions import Funcs
+from utils.helper.functions import Funcs
 
 class FuncFormat:
     def __init__(self):
