@@ -6,7 +6,6 @@ from core.style_cli import StyleCli
 class FileLocal:
     def __init__(self):
         self._cli = StyleCli()
-        self.file_skipe = None
 
     def open_file(self, filename: str, mode: str):
         if filename and mode:
@@ -21,13 +20,13 @@ class FileLocal:
             except Exception:
                 self._cli.console.print_exception(max_frames=3)
 
-    def save_value(self, value: str, file: str):
+    def save_value(self, value: str, file: str, mode: str = 'a+'):
         if value and file:
             try:
-                _, data_return = self.open_file(file, 'a+')
+                _, data_return = self.open_file(file, mode)
                 data_return.writelines(value)
                 data_return.close()
-            except Exception as e:
+            except Exception:
                 self._cli.console.print_exception(max_frames=3)
 
     def open_file_csv(self, filename: str, mode: str):
@@ -59,3 +58,25 @@ class FileLocal:
                 return {'dirs': dir_list, 'files': file_list}
             except Exception:
                 self._cli.console.print_exception(max_frames=3)
+
+
+class AttrDict(dict):
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+
+
+class Configs:
+
+    def __init__(self):
+        self._config = configparser.ConfigParser(dict_type=AttrDict)
+        self._path = 'config'
+        self.file = 'default.ini'
+
+    def open_config(self) -> dict[str]:
+        try:
+            self._config.read(f'./{self._path}/{self.file}')
+            if self._config._sections.general:
+                return self._config._sections.general
+        except Exception as e:
+            print(e)

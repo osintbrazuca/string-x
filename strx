@@ -6,6 +6,7 @@ import select
 from datetime import datetime
 from core.filelocal import FileLocal
 from core.command import Command
+from core.configs import Configs
 from core.banner.asciiart import AsciiBanner
 from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
 from core.thread_process import ThreadProcess
@@ -47,8 +48,14 @@ __git__ = [
 #   - Funções de manipulação:
 #       Ex: md5(str), hex(str), replace(str,str)
 
-def signal_handler(signal, frame):
+def quit_process(signal, frame):
+    #todo
+    # TERMINAR DE VINCULAR ARQUIVO CONGIS ao codigo
+    print("")
     CONFIG_CLI.console.log(" [!] Saindo...")
+    CONFIG_CLI.console.log(f" [!] File output: {CONFIG_FILE_OUTPUT}")
+    CONFIG_CLI.console.log(f"[!] Last value: {CONFIG_COMMAND.last_log}")
+    CONFIG_FILE.save_value(CONFIG_COMMAND.last_log, f'./{CONFIG_GENERAL.output}/{CONFIG_GENERAL.file_last_log}')
     sys.exit(0)
 
 
@@ -100,15 +107,26 @@ def main(target_str_list: list, template_str: str) -> None:
             CONFIG_CLI.console.print_exception(max_frames=3)
 
 
+class AttrDict(dict):
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+
+
 if __name__ == '__main__':
-    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, quit_process)
+    CONFIG_GENERAL = Configs().open_config()
     CONFIG_CLI = StyleCli()
     CONFIG_FILE = FileLocal()
     CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
     CONFIG_THREAD = ThreadProcess()
     CONFIG_BANNER = AsciiBanner()
     CONFIG_THREAD_MAX = 10
-    CONFIG_FILE_OUTPUT = f'output-{CONFIG_TIME}.txt'
+    CONFIG_FILE_OUTPUT = f'./{CONFIG_GENERAL.output}/output-{CONFIG_TIME}.txt'
+    banner_help = (
+        CONFIG_BANNER.show_random() if CONFIG_GENERAL.banner_random is True else CONFIG_BANNER.show(
+            CONFIG_GENERAL.banner)
+    )
 
     try:
         parser = RichArgumentParser(
@@ -116,7 +134,7 @@ if __name__ == '__main__':
             formatter_class=lambda prog: RawDescriptionHelpFormatter(
                 prog, max_help_position=60,
                 indent_increment=13),
-            description=CONFIG_BANNER.show('strx'),
+            description=banner_help
         )
         parser.add_argument('-list', '-l', metavar="file", help="Arquivo com strings para execução",
                             default=stdin_get_list())
@@ -137,6 +155,7 @@ if __name__ == '__main__':
 
         ARGS = parser.parse_args()
         CONFIG_COMMAND = Command(file_output=ARGS.out)
+        CONFIG_COMMAND.last_log = f'./{CONFIG_GENERAL.output}/{CONFIG_GENERAL.file_last_log}'
 
         if ARGS.thread:
             CONFIG_THREAD.max_thread = int(ARGS.thread)
@@ -145,7 +164,7 @@ if __name__ == '__main__':
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
             CONFIG_COMMAND.verbose = ARGS.verbose
         else:
-            CONFIG_CLI.console.print(f"{CONFIG_BANNER.show_random()}\n")
+            CONFIG_CLI.console.print(f"{banner_help}\n")
             exit(parser.parse_args('-h'))
 
         main(

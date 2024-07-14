@@ -86,7 +86,7 @@ RESULTADO
 Isso exibirá ajuda para a ferramenta. Aqui estão todos os opções que ele suporta.
 
 ```bash
-usage: strx [-h] [-list file] -str cmd [-out file] [-skip path] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of]
+usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-ifvalue value]
 
  
                                              _
@@ -122,16 +122,16 @@ usage: strx [-h] [-list file] -str cmd [-out file] [-skip path] [-pipe cmd] [-ve
                                 String-X: Tool for automating commands
 
 options:
-             -h, --help             show this help message and exit
-             -list file, -l file    Arquivo com strings para execução
-             -str cmd, -st cmd      String template de comando
-             -out file, -o file     Arquivo output de valores da execução shell
-             -skip path, -s path    String que o processo vai pular. Ex: -s string ou --skip string
-             -pipe cmd, -p cmd      Comando que será executado depois de um pipe |
-             -verbose, -v           Modo verboso
-             -thread <10>, -t <10>  Quantidade de threads
-             -pf                    Mostrar resultados da execução de função
-             -of                    Habilitar output de valores da execução de função
+             -h, --help                 show this help message and exit
+             -list file, -l file        Arquivo com strings para execução
+             -str cmd, -st cmd          String template de comando
+             -out file, -o file         Arquivo output de valores da execução shell
+             -pipe cmd, -p cmd          Comando que será executado depois de um pipe |
+             -verbose, -v               Modo verboso
+             -thread <10>, -t <10>      Quantidade de threads
+             -pf                        Mostrar resultados da execução de função
+             -of                        Habilitar output de valores da execução de função
+             -ifvalue value, -if value  Valor para filtro strings de execução
 
 ```
 
