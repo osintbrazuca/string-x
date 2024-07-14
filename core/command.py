@@ -1,7 +1,8 @@
+import time
 import shlex
-import logging.config
 import argparse
 import subprocess
+import logging.config
 from core.format import Format
 from core.func_format import FuncFormat
 from core.style_cli import StyleCli
@@ -16,6 +17,7 @@ class Command:
         self._print_func: bool = False
         self._output_func: bool = False
         self._filter: str = str()
+        self._sleep: int = int()
         self.file_output: str = str()
         self.file_last_output: str = str()
         self.last_value: str = str()
@@ -142,6 +144,9 @@ class Command:
             self._print_func = args.pf
             self._output_func = args.of
             self._filter = args.filter
+            self._sleep = args.sleep
+
+            if self._sleep: time.sleep(int(self._sleep))
 
             if self._filter:
                 if self._filter not in target:

@@ -86,7 +86,7 @@ RESULTADO
 Isso exibirá ajuda para a ferramenta. Aqui estão todos os opções que ele suporta.
 
 ```bash
-usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-filter value]
+usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-filter value] [-sleep <5>]
 
  
                                              _
@@ -132,6 +132,7 @@ options:
              -pf                      Mostrar resultados da execução de função
              -of                      Habilitar output de valores da execução de função
              -filter value, -f value  Valor para filtrar strings para execução
+             -sleep <5>               Segundos de delay entre threads
 ```
 
 ### EXEMPLO DE COMANDOS
