@@ -103,6 +103,7 @@ if __name__ == '__main__':
         parser.add_argument('-pf', help="Mostrar resultados da execução de função", action='store_true', default=False)
         parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
         parser.add_argument('-filter', '-f', metavar="value", help="Valor para filtrar strings para execução", default=None, required=False)
+        parser.add_argument('-sleep', metavar="<5>", help="Segundos de delay entre threads", default=None, required=False)
         
         ARGS = parser.parse_args()
 
