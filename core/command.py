@@ -15,7 +15,7 @@ class Command:
         self._cli = StyleCli()
         self._print_func: bool = False
         self._output_func: bool = False
-        self._filter: str = str()
+        self._exclude: str = str()
         self.file_output: str = str()
         self.file_last_output: str = str()
         self.last_value: str = str()
@@ -140,12 +140,12 @@ class Command:
             self._save_last_target(target)
             self._print_func = args.pf
             self._output_func = args.of
-            self._filter = args.filter
+            self._exclude = args.exclude
 
-            if self._filter:
-                if self._filter not in target:
+            if self._exclude:
+                if self._exclude not in target:
                     return self._cli.verbose(f"[X] IF VALUE: {target}", self.verbose)
-                elif self._filter in target:
+                elif self._exclude in target:
                     self._cli.verbose(f"[!] IF VALUE: {target}", self.verbose)
 
             try:

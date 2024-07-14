@@ -102,7 +102,8 @@ if __name__ == '__main__':
         parser.add_argument('-thread', '-t', metavar=f"<{setting.THREAD_MAX}>", help="Quantidade de threads", default=setting.THREAD_MAX)
         parser.add_argument('-pf', help="Mostrar resultados da execução de função", action='store_true', default=False)
         parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
-        parser.add_argument('-filter', '-f', metavar="value", help="Valor para filtro strings de execução", default=None, required=False)
+        parser.add_argument('-exclude', '-e', metavar="value", help="Valor para excluir do processo de execução", default=None, required=False)
+       
         ARGS = parser.parse_args()
 
         if ARGS.thread:
