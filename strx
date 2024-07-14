@@ -1,14 +1,14 @@
 #!/usr/bin/python
-import sys
 import os
+import sys
 import signal
 import select
-from datetime import datetime
-from core.filelocal import FileLocal
+from config import setting
 from core.command import Command
-from core.banner.asciiart import AsciiBanner
-from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
+from core.filelocal import FileLocal
 from core.thread_process import ThreadProcess
+from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
+
 
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
 __maintainer__ = "Cleiton Pinheiro aka MrCl0wn"
@@ -23,32 +23,11 @@ __git__ = [
 ]
 
 
-# TODO:
-# - def exec_command 
-#   - Efetuar mais testes com shlex
-#   - Efetuar mais mudança de Popen para run
-#   - Analisar uso de '>' redirect para arquivos
-# - Argumentos
-#   - Criar módulo para parser.add_argument
-#   - Validação para comando -skip
-#   - Função para pausar e continuar processo
-# - Segunda LIST de string
-#   - Cria fluxo para coletar uma segunda lista de string
-#       tal lista será usada em modelo fuzz dentro do -st / str
-# - Módulos
-#   - Criar gerenciamento que recebe arquivo (lista) com diversos comandos 
-#   - Criar estrutura para receber módulos da comunidade
-#   - Gerenciamento de banners
-#   - Parser para templates de comando yaml
-#   - Check de updates usando git
-#   - Módulos de conexão para receber e enviar dados
-#       Ex: Mysql, Telegram, Splunk, Elastic 
-#   - Gereniamento de loop e delay
-#   - Funções de manipulação:
-#       Ex: md5(str), hex(str), replace(str,str)
-
-def signal_handler(signal, frame):
-    CONFIG_CLI.console.log(" [!] Saindo...")
+def quit_process(signal, frame) -> None:
+    print("")
+    CLI.console.log(f" [!] Saindo...")
+    CLI.console.log(f" [!] File output: {setting.LOG_FILE_OUTPUT}")
+    CLI.console.log(f" [!] Last value: {CMD.last_value}")
     sys.exit(0)
 
 
@@ -66,17 +45,17 @@ def stdin_get_list() -> list:
             return None
         return None
     except KeyboardInterrupt:
-        CONFIG_CLI.console.print_exception(max_frames=3)
+        CLI.console.print_exception(max_frames=3)
     except NameError:
-        CONFIG_CLI.console.print_exception(max_frames=3)
+        CLI.console.print_exception(max_frames=3)
     except IOError:
-        CONFIG_CLI.console.print_exception(max_frames=3)
+        CLI.console.print_exception(max_frames=3)
 
 
 def open_file(filename: str) -> list[str]:
     if filename:
         try:
-            txt_line, _ = CONFIG_FILE.open_file(filename, 'r')
+            txt_line, _ = FILE.open_file(filename, 'r')
             if txt_line:
                 return txt_line
         except Exception:
@@ -88,27 +67,24 @@ def main(target_str_list: list, template_str: str) -> None:
         try:
             if list is type(target_str_list):
                 try:
-                    CONFIG_THREAD.exec_thread(
-                        function_name=CONFIG_COMMAND.command_template,
+                    THREAD.exec_thread(
+                        function_name=CMD.command_template,
                         command_str=template_str,
                         target_list=target_str_list,
                         argparse=ARGS,
                     )
                 except Exception:
-                    CONFIG_CLI.console.print_exception(max_frames=3)
+                    CLI.console.print_exception(max_frames=3)
         except BrokenPipeError:
-            CONFIG_CLI.console.print_exception(max_frames=3)
+            CLI.console.print_exception(max_frames=3)
 
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGINT, signal_handler)
-    CONFIG_CLI = StyleCli()
-    CONFIG_FILE = FileLocal()
-    CONFIG_TIME = datetime.now().strftime("%d-%m-%Y-%H")
-    CONFIG_THREAD = ThreadProcess()
-    CONFIG_BANNER = AsciiBanner()
-    CONFIG_THREAD_MAX = 10
-    CONFIG_FILE_OUTPUT = f'output-{CONFIG_TIME}.txt'
+    signal.signal(signal.SIGINT, quit_process)
+    CLI = StyleCli()
+    FILE = FileLocal()
+    THREAD = ThreadProcess()
+    CMD = Command()
 
     try:
         parser = RichArgumentParser(
@@ -116,37 +92,31 @@ if __name__ == '__main__':
             formatter_class=lambda prog: RawDescriptionHelpFormatter(
                 prog, max_help_position=60,
                 indent_increment=13),
-            description=CONFIG_BANNER.show('strx'),
+            description=setting.BANNER_HELP
         )
-        parser.add_argument('-list', '-l', metavar="file", help="Arquivo com strings para execução",
-                            default=stdin_get_list())
-        parser.add_argument('-str', '-st', metavar="cmd", help="String template de comando", default=None,
-                            required=True)
-        parser.add_argument('-out', '-o', metavar="file", help="Arquivo output de valores da execução shell",
-                            default=CONFIG_FILE_OUTPUT)
-        parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando que será executado depois de um pipe |",
-                            default=None)
+        parser.add_argument('-list', '-l', metavar="file", help="Arquivo com strings para execução", default=stdin_get_list())
+        parser.add_argument('-str', '-st', metavar="cmd", help="String template de comando", default=None, required=True)
+        parser.add_argument('-out', '-o', metavar="file", help="Arquivo output de valores da execução shell", default=setting.LOG_FILE_OUTPUT)
+        parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando que será executado depois de um pipe |", default=None)
         parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true', default=False)
-        parser.add_argument('-thread', '-t', metavar=f"<{CONFIG_THREAD_MAX}>", help="Quantidade de threads",
-                            default=CONFIG_THREAD_MAX)
+        parser.add_argument('-thread', '-t', metavar=f"<{setting.THREAD_MAX}>", help="Quantidade de threads", default=setting.THREAD_MAX)
         parser.add_argument('-pf', help="Mostrar resultados da execução de função", action='store_true', default=False)
-        parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true',
-                            default=False)
-        parser.add_argument('-ifvalue', '-if', metavar="value", help="Valor para filtro strings de execução",
-                            default=None, required=False)
-
+        parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
+        parser.add_argument('-ifvalue', '-if', metavar="value", help="Valor para filtro strings de execução", default=None, required=False)
         ARGS = parser.parse_args()
-        CONFIG_COMMAND = Command(file_output=ARGS.out)
 
         if ARGS.thread:
-            CONFIG_THREAD.max_thread = int(ARGS.thread)
+            THREAD.max_thread = int(ARGS.thread)
 
         if ARGS.list:
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
-            CONFIG_COMMAND.verbose = ARGS.verbose
         else:
-            CONFIG_CLI.console.print(f"{CONFIG_BANNER.show_random()}\n")
+            CLI.console.print(f"{setting.BANNER_HELP}\n")
             exit(parser.parse_args('-h'))
+
+        CMD.file_output = ARGS.out
+        CMD.file_last_output = f'./{setting.LOG_DIRECTORY}/{setting.LOG_FILE_LAST}'
+        CMD.verbose = ARGS.verbose
 
         main(
             target_str_list=target_list,
@@ -155,6 +125,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
     except SystemError:
-        CONFIG_CLI.console.print_exception(max_frames=3)
+        CLI.console.print_exception(max_frames=3)
     except ModuleNotFoundError:
-        CONFIG_CLI.console.print_exception(max_frames=3)
+        CLI.console.print_exception(max_frames=3)

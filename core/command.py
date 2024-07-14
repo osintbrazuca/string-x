@@ -7,8 +7,9 @@ from core.func_format import FuncFormat
 from core.style_cli import StyleCli
 from core.filelocal import FileLocal
 
+
 class Command:
-    def __init__(self, file_output: str):
+    def __init__(self,):
         self._file = FileLocal()
         self._format_func = FuncFormat()
         self._cli = StyleCli()
@@ -16,7 +17,9 @@ class Command:
         self._output_func: bool = False
         self._if_value: str = str()
         self.verbose: bool = False
-        self.file_output: str = file_output
+        self.file_output: str = str()
+        self.file_last_output: str = str()
+        self.last_value: str = str()
         self._logging_config = {
             "version": 1,
             "handlers": {
@@ -56,11 +59,17 @@ class Command:
         if value:
             self._file.save_value(f"{value}\n", self.file_output)
 
-    def _shlex(self, command: str) -> list[str]:
+    def _save_last_target(self, value: str) -> None:
+        if value:
+            self.last_value = value
+            self._file.save_last_value(f"{value}\n", file=self.file_last_output)
+
+    @staticmethod
+    def _shlex(command: str) -> list[str]:
         if command:
             return shlex.split(f"{command}")
 
-    def _exec_command(self,command: str, pipe_command: str) -> None:
+    def _exec_command(self, command: str, pipe_command: str) -> None:
         if command:
             try:
                 result_command = subprocess.Popen(
@@ -80,7 +89,7 @@ class Command:
                         if not self._print_func:
                             self._cli.console.print(e)
                     except ValueError:
-                         pass
+                        pass
 
                 if result_command.stdout:
                     for line_std in result_command.stdout:
@@ -98,7 +107,7 @@ class Command:
             except ValueError:
                 pass
 
-    def _format_function(self, command:str) -> str:
+    def _format_function(self, command: str) -> str:
         command_func: str = str()
         try:
             if command:
@@ -108,7 +117,7 @@ class Command:
                         if command_func: self._cli.console.log(command_func)
                     else:
                         if command_func: self._cli.console.print(command_func)
-                if self._output_func and command_func: 
+                if self._output_func and command_func:
                     self._save_command_log(command_func)
             return command_func
         except Exception:
@@ -128,23 +137,23 @@ class Command:
     def command_template(self, target: str, command: str, args: argparse.Namespace):
         if target and command:
             target = Format.clear_value(target)
+            self._save_last_target(target)
             self._print_func = args.pf
             self._output_func = args.of
             self._if_value = args.ifvalue
-            
+
             if self._if_value:
                 if self._if_value not in target:
                     return self._cli.verbose(f"[X] IF VALUE: {target}", self.verbose)
                 elif self._if_value in target:
-                    self._cli.verbose(f"[!] IF VALUE: {target}", self.verbose) 
+                    self._cli.verbose(f"[!] IF VALUE: {target}", self.verbose)
 
             try:
-                    command_target = self._command_prepare(target, command)
-                    command_pipe = self._command_prepare(target, args.pipe)
-                    if command: self._cli.verbose(f"[!] TEMPLATE: {command}", self.verbose)
-                    if command_target: self._cli.verbose(f"[!] COMMAND: {command_target}", self.verbose)
-                    if command_pipe: self._cli.verbose(f"[!] PIPE: {command_pipe}", self.verbose)
-                    return self._exec_command(command_target, command_pipe)
+                command_target = self._command_prepare(target, command)
+                command_pipe = self._command_prepare(target, args.pipe)
+                if command: self._cli.verbose(f"[!] TEMPLATE: {command}", self.verbose)
+                if command_target: self._cli.verbose(f"[!] COMMAND: {command_target}", self.verbose)
+                if command_pipe: self._cli.verbose(f"[!] PIPE: {command_pipe}", self.verbose)
+                return self._exec_command(command_target, command_pipe)
             except Exception:
                 pass
-             
