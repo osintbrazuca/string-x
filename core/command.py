@@ -15,11 +15,11 @@ class Command:
         self._cli = StyleCli()
         self._print_func: bool = False
         self._output_func: bool = False
-        self._if_value: str = str()
-        self.verbose: bool = False
+        self._filter: str = str()
         self.file_output: str = str()
         self.file_last_output: str = str()
         self.last_value: str = str()
+        self.verbose: bool = False
         self._logging_config = {
             "version": 1,
             "handlers": {
@@ -95,11 +95,12 @@ class Command:
                     for line_std in result_command.stdout:
                         if line_std:
                             line_std = Format.clear_value(line_std)
-                            self._save_command_log(line_std)
                             if self.verbose:
                                 self._cli.console.log(line_std)
                             else:
                                 self._cli.console.print(line_std)
+                            self._save_command_log(line_std)
+
             except FileNotFoundError as e:
                 if not self._print_func:
                     self._cli.console.print(e)
@@ -140,12 +141,12 @@ class Command:
             self._save_last_target(target)
             self._print_func = args.pf
             self._output_func = args.of
-            self._if_value = args.ifvalue
+            self._filter = args.filter
 
-            if self._if_value:
-                if self._if_value not in target:
+            if self._filter:
+                if self._filter not in target:
                     return self._cli.verbose(f"[X] IF VALUE: {target}", self.verbose)
-                elif self._if_value in target:
+                elif self._filter in target:
                     self._cli.verbose(f"[!] IF VALUE: {target}", self.verbose)
 
             try:

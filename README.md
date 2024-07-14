@@ -86,7 +86,7 @@ RESULTADO
 Isso exibirá ajuda para a ferramenta. Aqui estão todos os opções que ele suporta.
 
 ```bash
-usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-ifvalue value]
+usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-filter value]
 
  
                                              _
@@ -122,17 +122,16 @@ usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thre
                                 String-X: Tool for automating commands
 
 options:
-             -h, --help                 show this help message and exit
-             -list file, -l file        Arquivo com strings para execução
-             -str cmd, -st cmd          String template de comando
-             -out file, -o file         Arquivo output de valores da execução shell
-             -pipe cmd, -p cmd          Comando que será executado depois de um pipe |
-             -verbose, -v               Modo verboso
-             -thread <10>, -t <10>      Quantidade de threads
-             -pf                        Mostrar resultados da execução de função
-             -of                        Habilitar output de valores da execução de função
-             -ifvalue value, -if value  Valor para filtro strings de execução
-
+             -h, --help               show this help message and exit
+             -list file, -l file      Arquivo com strings para execução
+             -str cmd, -st cmd        String template de comando
+             -out file, -o file       Arquivo output de valores da execução shell
+             -pipe cmd, -p cmd        Comando que será executado depois de um pipe |
+             -verbose, -v             Modo verboso
+             -thread <10>, -t <10>    Quantidade de threads
+             -pf                      Mostrar resultados da execução de função
+             -of                      Habilitar output de valores da execução de função
+             -filter value, -f value  Valor para filtrar strings para execução
 ```
 
 ### EXEMPLO DE COMANDOS
@@ -224,11 +223,11 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 ```
 > **Nota:** É possivel adicionar funções personalizadas via arquivo [**utils/functions.py**](./utils/functions.py)
 
-## IF
-Filtrar valores para execução de comando, é usado o parâmetro ```-if / -ifvalue```.
+## FILTER
+Filtrar valores para execução de comando, é usado o parâmetro ```-f / -filter```.
 ```bash
-./strx -l domains.txt -str 'curl {STRING};' -if .gov.br
-./strx -l url.txt -str 'curl {STRING};' -if https
+./strx -l domains.txt -str 'curl {STRING};' -filter .gov.br
+./strx -l url.txt -str 'curl {STRING};' -f https
 ```
 ---
 
