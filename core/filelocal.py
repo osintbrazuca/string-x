@@ -1,5 +1,6 @@
 import csv
 import pathlib
+import configparser
 from core.style_cli import StyleCli
 
 
@@ -23,8 +24,17 @@ class FileLocal:
     def save_value(self, value: str, file: str, mode: str = 'a+'):
         if value and file:
             try:
-                _, data_return = self.open_file(file, mode)
+                data_return = open(file, mode)
                 data_return.writelines(value)
+                data_return.close()
+            except Exception:
+                self._cli.console.print_exception(max_frames=3)
+
+    def save_last_value(self, value: str, file: str):
+        if value and file:
+            try:
+                data_return = open(file, 'w')
+                data_return.write(value)
                 data_return.close()
             except Exception:
                 self._cli.console.print_exception(max_frames=3)
@@ -32,9 +42,7 @@ class FileLocal:
     def open_file_csv(self, filename: str, mode: str):
         if filename and mode:
             try:
-                # TODO
-                # Refazer função
-                _, data_file = self.open_file(filename, mode)
+                data_file = open(filename, mode)
                 data_return = csv.DictReader(data_file)
                 csv_line = data_file
                 return csv_line, data_return
