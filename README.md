@@ -231,7 +231,15 @@ O String-X permite estender sua funcionalidade através de módulos especializad
 
 ### Módulos Disponíveis
 
+Extractor - `ext`
 - **email**: Extrai e valida endereços de email de strings
+- **domain**: Extrai e valida endereços de domain de strings
+- **url**: Extrai e valida endereços de urls de strings
+- **phone**: Extrai e valida endereços de phone de strings
+
+Collector - `clc`
+- **dns**: Coleta registros DNS de hosts
+
 
 ### Parâmetros Relacionados
 

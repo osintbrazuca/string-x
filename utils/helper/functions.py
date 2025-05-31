@@ -1,4 +1,7 @@
 import socket
+import datetime
+import json
+from urllib.parse import urlparse
 from core.request import Request
 from core.format import Format
 from core.randomvalue import RandomValue
@@ -111,5 +114,48 @@ class Funcs:
             if value_rev:
                 return value_rev
         return str()
+    
+
+    
+    @staticmethod
+    def timestamp(value: str) -> str:
+        """
+        Retorna timestamp atual.
+        
+        Args:
+            value: Formato da data/hora
+            
+        Returns:
+            Timestamp formatado
+        """
+        if not value:
+            return str()
+
+        try:
+            return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            return str()
+        
+    
+    @staticmethod
+    def extract_domain(value: str) -> str:
+        """
+        Extrai domínio de uma URL.
+        
+        Args:
+            value: URL completa
+            
+        Returns:
+            Domínio extraído
+        """
+        if not value:
+            return str()
+        
+        
+        try:
+            parsed = urlparse(value)
+            return parsed.netloc or parsed.path.split('/')[0]
+        except:
+            return str()
            
     
