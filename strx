@@ -7,7 +7,16 @@ from config import setting
 from core.command import Command
 from core.filelocal import FileLocal
 from core.thread_process import ThreadProcess
+
 from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
+from core.auto_module import AutoModulo
+
+"""
+output      → OUT
+connection  → CON
+extractor   → EXT
+collector   → CLC
+"""
 
 
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
@@ -100,21 +109,24 @@ if __name__ == '__main__':
         parser.add_argument('-pipe', '-p', metavar="cmd", help="Comando que será executado depois de um pipe |", default=None)
         parser.add_argument('-verbose', '-v', help="Modo verboso", action='store_true', default=False)
         parser.add_argument('-thread', '-t', metavar=f"<{setting.THREAD_MAX}>", help="Quantidade de threads", default=setting.THREAD_MAX)
-        parser.add_argument('-pf', help="Mostrar resultados da execução de função", action='store_true', default=False)
+        parser.add_argument('-pf', help="Mostrar resultados da execução de função, ignora shell", action='store_true', default=False)
         parser.add_argument('-of', help="Habilitar output de valores da execução de função", action='store_true', default=False)
         parser.add_argument('-filter', '-f', metavar="value", help="Valor para filtrar strings para execução", default=None, required=False)
         parser.add_argument('-sleep', metavar="<5>", help="Segundos de delay entre threads", default=None, required=False)
+        parser.add_argument('-module', metavar="<type:module>", help="Selectionar o tipo e module", default=str(), required=False)
+        parser.add_argument('-pm', help="Mostrar somente resultados de execução do module", action='store_true', default=False)
         
-        ARGS = parser.parse_args()
+        ARGS = parser.parse_args() 
 
         if ARGS.thread:
             THREAD.max_thread = int(ARGS.thread)
-
+        
         if ARGS.list:
             target_list = open_file(ARGS.list) if os.path.isfile(str(ARGS.list)) else ARGS.list
         else:
             CLI.console.print(f"{setting.BANNER_HELP}\n")
             exit(parser.parse_args('-h'))
+
 
         CMD.file_output = ARGS.out
         CMD.file_last_output = f'./{setting.LOG_DIRECTORY}/{setting.LOG_FILE_LAST}'
