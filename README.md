@@ -86,7 +86,7 @@ RESULTADO
 Isso exibirá ajuda para a ferramenta. Aqui estão todos os opções que ele suporta.
 
 ```bash
-usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-filter value] [-sleep <5>]
+usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thread <10>] [-pf] [-of] [-filter value] [-sleep <5>] [-module <type:module>] [-pm]
 
  
                                              _
@@ -119,20 +119,22 @@ usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose] [-thre
                                   ░                    ░         ░    ░  
                                   ░                                      
                                 
-                                String-X: Tool for automating commands
+                                 String-X: Tool for automating commands
 
 options:
-             -h, --help               show this help message and exit
-             -list file, -l file      Arquivo com strings para execução
-             -str cmd, -st cmd        String template de comando
-             -out file, -o file       Arquivo output de valores da execução shell
-             -pipe cmd, -p cmd        Comando que será executado depois de um pipe |
-             -verbose, -v             Modo verboso
-             -thread <10>, -t <10>    Quantidade de threads
-             -pf                      Mostrar resultados da execução de função
-             -of                      Habilitar output de valores da execução de função
-             -filter value, -f value  Valor para filtrar strings para execução
-             -sleep <5>               Segundos de delay entre threads
+             -h, --help             show this help message and exit
+             -list, -l file         Arquivo com strings para execução
+             -str, -st cmd          String template de comando
+             -out, -o file          Arquivo output de valores da execução shell
+             -pipe, -p cmd          Comando que será executado depois de um pipe |
+             -verbose, -v           Modo verboso
+             -thread, -t <10>       Quantidade de threads
+             -pf                    Mostrar resultados da execução de função, ignora shell
+             -of                    Habilitar output de valores da execução de função
+             -filter, -f value      Valor para filtrar strings para execução
+             -sleep <5>             Segundos de delay entre threads
+             -module <type:module>  Selectionar o tipo e module
+             -pm                    Mostrar somente resultados de execução do module
 ```
 
 ### EXEMPLO DE COMANDOS
@@ -147,6 +149,7 @@ Comandos que podem ser úteis para a criação de suas tricks.
 ./strx -l ./vermelho.txt -st 'grep -Ei "{STRING}" -R ./cores/' -out resultado.txt
 ./strx -l ./strings.txt -st 'grep -Ei "{STRING}" -R ./targets/' -pipe "awk -F ':' '{print \$2}'"
 ./strx -l ../rgs.txt -st './script --rg "{STRING}"' | grep 'SP:' | sort -u
+./strx -l ./dump_sql.txt -st 'echo "{STRING}"'  -module 'ext:email' -pm | sort -u
 ```
 ### RECEBENDO STRINGS VIA PIPE
 Pipe: Envia a saída de um comando para a entrada do próximo comando para continuidade do processamento. Os dados enviados são processados pelo próximo comando que mostrará o resultado do processamento. Pode ser usado desde um simples cat até mesmo resultados de algum fuzzing.
@@ -211,6 +214,52 @@ cat hosts.txt | ./strx -str "curl -Iksw 'CODE:%{response_code};IP:%{remote_ip}' 
 |  get  |  envia um request get  |  str  |
 |  urlencode  |  Encode de url  |  str  |
 |  rev  |  String reversa  |  str  |
+
+
+## Módulos
+
+O String-X permite estender sua funcionalidade através de módulos especializados. Você pode definir o uso de módulos utilizando o parâmetro `-module` com o formato `tipo:nome_do_módulo`.
+
+### Tipos de Módulos
+
+| Tipo | Código | Descrição |
+|------|--------|-----------|
+| Output | `out` | Módulos para formatação de saída |
+| Connection | `con` | Módulos para estabelecer conexões |
+| Extractor | `ext` | Módulos para extrair dados específicos |
+| Collector | `clc` | Módulos para coletar e agregar informações |
+
+### Módulos Disponíveis
+
+Extractor - `ext`
+- **email**: Extrai e valida endereços de email de strings
+- **domain**: Extrai e valida endereços de domain de strings
+- **url**: Extrai e valida endereços de urls de strings
+- **phone**: Extrai e valida endereços de phone de strings
+
+Collector - `clc`
+- **dns**: Coleta registros DNS de hosts
+
+
+### Parâmetros Relacionados
+
+- `-module tipo:nome_do_módulo`: Especifica o tipo e nome do módulo a ser utilizado
+- `-pm`: Exibe apenas os resultados da execução do módulo, omitindo outras saídas
+
+### Exemplos de Uso
+
+```bash
+# Extrair emails de uma lista usando arquivo como entrada
+./strx -l emails.txt -str 'echo {STRING}' -module 'ext:email'
+
+# Extrair emails de uma lista via pipe e mostrar apenas resultados do módulo
+cat emails.txt | ./strx -str 'echo {STRING}' -module 'ext:email' -pm
+
+# Extrair emails de um dump SQL e ordená-los
+./strx -l ./dump_sql.txt -str 'echo "{STRING}"' -module 'ext:email' -pm | sort -u
+```
+
+> **Nota:** Você pode adicionar novos módulos conforme a necessidade do seu projeto, seguindo o padrão de desenvolvimento da ferramenta.
 
 ### -pf / -op
 - -pf Mostrar resultados da execução de função (o shell é ignorado)

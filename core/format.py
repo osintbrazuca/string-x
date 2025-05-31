@@ -7,6 +7,43 @@ import yaml
 
 
 class Format:
+    """
+    A utility class for various string formatting and encoding operations.
+
+    Methods:
+        clear_value(value: str) -> str:
+            Removes leading and trailing whitespace and tabs, newlines, and carriage returns from the string.
+
+        decode64(value: str) -> str:
+            Decodes a base64 encoded string.
+
+        encode64(value: str) -> str:
+            Encodes a string into base64.
+
+        sha1(value: str) -> str:
+            Generates a SHA-1 hash of the string.
+
+        sha256(value: str) -> str:
+            Generates a SHA-256 hash of the string.
+
+        encodehex(value: str) -> str:
+            Encodes a string into its hexadecimal representation.
+
+        decodehex(value: str) -> str:
+            Decodes a hexadecimal string back to its original string.
+
+        md5(value: str) -> str:
+            Generates an MD5 hash of the string.
+
+        json(value: str):
+            Parses a YAML string into a Python object.
+
+        regex(value: str, regex: str) -> str:
+            Finds all occurrences of a regex pattern in the string.
+
+        parse_urlencode(url: str) -> str:
+            Encodes a URL string using URL encoding.
+    """
 
     @staticmethod
     def clear_value(value: str) -> str:

@@ -7,7 +7,7 @@ from core.format import Format
 from core.func_format import FuncFormat
 from core.style_cli import StyleCli
 from core.filelocal import FileLocal
-
+from core.auto_module import AutoModulo
 
 class Command:
     def __init__(self,):
@@ -16,12 +16,15 @@ class Command:
         self._cli = StyleCli()
         self._print_func: bool = False
         self._output_func: bool = False
+        self._print_result_module: bool = False
         self._filter: str = str()
         self._sleep: int = int()
         self.file_output: str = str()
         self.file_last_output: str = str()
         self.last_value: str = str()
         self.verbose: bool = False
+        self._type_module: str = str()
+        
         self._logging_config = {
             "version": 1,
             "handlers": {
@@ -71,6 +74,16 @@ class Command:
         if command:
             return shlex.split(f"{command}")
 
+    def _exec_module(self, _type_module:str, data:str) -> AutoModulo | None:
+        if not _type_module or ":" not in _type_module or data is None:
+            return None
+        auto_load = AutoModulo(_type_module)
+        if obj_module := auto_load.load_module():
+            obj_module.options.update({"data": data})
+            obj_module.run()
+            return obj_module
+        return None
+
     def _exec_command(self, command: str, pipe_command: str) -> None:
         if command:
             try:
@@ -96,12 +109,13 @@ class Command:
                 if result_command.stdout:
                     for line_std in result_command.stdout:
                         if line_std:
-                            line_std = Format.clear_value(line_std)
-                            if self.verbose:
-                                self._cli.console.log(line_std)
-                            else:
-                                self._cli.console.print(line_std)
-                            self._save_command_log(line_std)
+                            if not self._print_result_module:
+                                line_std = Format.clear_value(line_std)
+                                self._print_line_std(line_std)
+                            if object_module := self._exec_module(self._type_module, line_std):
+                                if result_module := object_module.get_result():
+                                    result_module = "\n".join(result_module)
+                                    self._print_line_std(result_module)
 
             except FileNotFoundError as e:
                 if not self._print_func:
@@ -109,6 +123,14 @@ class Command:
                 pass
             except ValueError:
                 pass
+
+    def _print_line_std(self, line_std) -> None:
+        if line_std:
+            if self.verbose:
+                self._cli.console.log(line_std)
+            else:
+                self._cli.console.print(line_std)
+            self._save_command_log(line_std)
 
     def _format_function(self, command: str) -> str:
         command_func: str = str()
@@ -145,6 +167,8 @@ class Command:
             self._output_func = args.of
             self._filter = args.filter
             self._sleep = args.sleep
+            self._type_module = args.module
+            self._print_result_module = args.pm
 
             if self._sleep: time.sleep(int(self._sleep))
 

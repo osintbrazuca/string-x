@@ -20,7 +20,9 @@ class ThreadProcess:
                             time.sleep(self._sleep)
                         thread = threading.Thread(
                             target=function_name, args=(
-                                tgt_str, command_str, argparse,)
+                                tgt_str, command_str,
+                                argparse,
+                            )
                         )
                         list_threads.append(thread)
                         thread.start()
