@@ -1,17 +1,41 @@
+"""
+Módulo extrator de domínios.
+
+Este módulo implementa funcionalidade para extrair domínios válidos de textos
+usando expressões regulares com validação de TLDs. Faz parte do sistema de
+módulos auxiliares do String-X.
+"""
 from core.basemodule import BaseModule
 import re
 
 class AuxRegexDomain(BaseModule):
-    """Módulo para extrair domínios de strings"""
+    """
+    Módulo para extração de domínios usando regex com validação de TLD.
+
+    Este módulo herda de BaseModule e fornece funcionalidade específica para
+    identificar e extrair domínios válidos de strings de texto, validando
+    contra uma lista extensa de TLDs conhecidos.
+
+    Attributes:
+        meta (dict): Metadados do módulo incluindo nome, descrição, autor e tipo
+        options (dict): Opções requeridas incluindo dados de entrada e padrão regex
+    """
     
     def __init__(self):
+        """
+        Inicializa o módulo extrator de domínios.
+        
+        Configura os metadados do módulo e define as opções necessárias,
+        incluindo uma lista extensa de TLDs válidos e o padrão regex
+        correspondente para detecção de domínios.
+        """
         super().__init__()
         self.meta = {
             "name": "Extractor de Domínios",
             "description": "Extrai domínios de strings fornecidas",
             "author": "MrCl0wn",
             "version": "1.0",
-            "type":"extractor"
+            "type": "extractor"
         }
         
         # Lista de TLDs válidos mais comuns
@@ -39,13 +63,18 @@ class AuxRegexDomain(BaseModule):
         
     def run(self):
         """
-        Implementação principal do módulo que extrai domínios
+        Executa o processo de extração de domínios.
         
-        Args:
-            data (str): String de entrada para processamento
-            **kwargs: Argumentos opcionais adicionais
+        Utiliza os dados fornecidos e o padrão regex configurado para identificar
+        e extrair domínios válidos com TLDs reconhecidos. Os domínios encontrados
+        são armazenados nos resultados do módulo.
+        
+        O processo inclui:
+        1. Verificação da disponibilidade de dados e padrão regex
+        2. Compilação do padrão regex com flag IGNORECASE
+        3. Busca por domínios no texto com validação de TLD
+        4. Armazenamento dos resultados únicos encontrados
         """
-    
         # Verifica se há dados para processar
         if (target_value := self.options.get("data")) and (regex_data := self.options.get("regex")): 
             regex_data = re.compile(regex_data, re.IGNORECASE)

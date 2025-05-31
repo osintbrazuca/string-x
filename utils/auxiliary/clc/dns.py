@@ -1,32 +1,58 @@
+"""
+Módulo CLC para coleta de informações DNS.
+
+Este módulo implementa um coletor de informações DNS que consulta diferentes
+tipos de registros DNS (A, MX, TXT, NS) para hosts especificados, utilizando
+dig como ferramenta subjacente.
+"""
 from core.basemodule import BaseModule
 import socket
 import subprocess
 
+
 class DnsInfo(BaseModule):
     """
-    Coleta informações DNS de hosts.
+    Coletor de informações DNS.
+    
+    Esta classe coleta registros DNS de hosts especificados, suportando
+    múltiplos tipos de registros (A, MX, TXT, NS) e permitindo configuração
+    de servidor DNS resolver e timeout.
+    
+    Herda de BaseModule fornecendo interface padrão para módulos auxiliares.
     """
     
     def __init__(self):
+        """
+        Inicializa o coletor DNS com configurações padrão.
+        """
         super().__init__()
         
         self.meta = {
             'name': 'DNS Information Collector',
             "author": "MrCl0wn",
             'version': '1.0',
-            'description': 'Coleta registros DNS de hosts',
+            'description': 'Coleta registros DNS de hosts usando dig',
             'type': 'collector'
         }
         
         self.options = {
             'data': str(),  # Nome do host a ser pesquisado
-            'records': ['A', 'MX', 'TXT', 'NS'],
-            'timeout': 5,
-            'resolver': '8.8.8.8'
+            'records': ['A', 'MX', 'TXT', 'NS'],  # Tipos de registros DNS
+            'timeout': 5,  # Timeout para consultas DNS
+            'resolver': '8.8.8.8'  # Servidor DNS resolver
         }
     
     def _get_dns_record(self, host: str, record_type: str) -> list:
-        """Obtém registro DNS específico."""
+        """
+        Obtém registro DNS específico usando dig.
+        
+        Args:
+            host (str): Nome do host para consulta
+            record_type (str): Tipo de registro DNS (A, MX, TXT, NS)
+            
+        Returns:
+            list: Lista de registros encontrados ou lista vazia
+        """
         try:
             cmd = ['dig', f'@{self.options["resolver"]}', 
                    '+short', host, record_type]
@@ -40,10 +66,10 @@ class DnsInfo(BaseModule):
     
     def run(self):
         """
-        Coleta informações DNS.
+        Executa coleta de informações DNS.
         
-        Args:
-            data (str): Nome do host
+        Consulta todos os tipos de registros DNS configurados para o host
+        especificado e formata o resultado em string legível.
         """
         host = self.options.get("data", "").strip()
         
@@ -55,13 +81,13 @@ class DnsInfo(BaseModule):
             'records': {}
         }
         
-        # Coletar cada tipo de registro
+        # Coletar cada tipo de registro DNS configurado
         for record_type in self.options['records']:
             records = self._get_dns_record(host, record_type)
             if records:
                 dns_info['records'][record_type] = records
         
-        # Formatar resultado
+        # Formatar resultado para saída legível
         if dns_info['records']:
             result = f"Host: {host}\n"
             for rtype, values in dns_info['records'].items():

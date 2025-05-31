@@ -1,21 +1,51 @@
+"""
+Módulo responsável pelo carregamento automático de módulos auxiliares.
+
+Este módulo contém a classe AutoModulo que é utilizada para importar automaticamente
+módulos e instanciar suas classes. Utiliza importação dinâmica baseada no tipo e nome
+do módulo para carregar e executar funcionalidades específicas.
+"""
 import importlib
 import inspect
 from core.style_cli import StyleCli
 
 class AutoModulo:
     """
-    This class is used to automatically import a module and instantiate its class.
-    It uses the module name and class name to dynamically load the module and create an instance of the class.
+    Classe responsável pelo carregamento automático de módulos.
+
+    Esta classe é utilizada para importar automaticamente um módulo e instanciar sua classe.
+    Utiliza o nome do módulo e nome da classe para carregar dinamicamente o módulo e criar
+    uma instância da classe.
+
+    Attributes:
+        _cli (StyleCli): Instância para interface CLI estilizada
+        _valid_type_module (bool): Flag indicando se o módulo é válido
+        type_module (str): Tipo do módulo (ex: "extractor", "scanner")
+        name_module (str): Nome do módulo (ex: "email", "domain")
+        class_instance: Instância da classe carregada
     """
     def __init__(self, type_module_name_module: str):
+        """
+        Inicializa o AutoModulo com o tipo e nome do módulo.
+        
+        Args:
+            type_module_name_module (str): String no formato 'tipo:nome' do módulo
+        """
         self._cli = StyleCli()
         self._valid_type_module = self._check_type_module_name_module(type_module_name_module)
 
     def _check_type_module_name_module(self,type_module_name_module: str) -> bool:
         """
-        Check if the type_module and name_module are valid.
-        The type_module should be a valid module type (e.g., "extractor", "scanner", etc.)
-        and the name_module should be a valid module name (e.g., "email", "domain", etc.).
+        Verifica se o tipo de módulo e nome do módulo são válidos.
+        
+        O tipo de módulo deve ser um tipo válido (ex: "extractor", "scanner", etc.)
+        e o nome do módulo deve ser um nome válido (ex: "email", "domain", etc.).
+        
+        Args:
+            type_module_name_module (str): String no formato 'tipo:nome'
+            
+        Returns:
+            bool: True se o formato for válido, False caso contrário
         """
         if ":" not in type_module_name_module:
             self._cli.console.print("[!] Invalid type_module_name_module format. Expected 'type_module:name_module'")
@@ -31,8 +61,12 @@ class AutoModulo:
 
     def load_module(self):
         """
-        Load the module and instantiate the class defined in it.
-        The module is expected to be in the format utils.auxiliary.{type_module}.{name_module}.
+        Carrega o módulo e instancia a classe definida nele.
+        
+        O módulo deve estar no formato utils.auxiliary.{type_module}.{name_module}.
+        
+        Returns:
+            object | None: Instância da classe carregada ou None se houver erro
         """
         if not self._valid_type_module:
             self._cli.console.print("[!] Invalid type_module or name_module format")
@@ -52,6 +86,12 @@ class AutoModulo:
         
 
     def _import_module(self):
+        """
+        Importa o módulo usando importlib.
+        
+        Raises:
+            ImportError: Se o módulo não puder ser importado
+        """
         try:
             self.module = importlib.import_module(f"utils.auxiliary.{self.type_module}.{self.name_module}")
             # self._cli.console.print(f"[*] Executando módulo: {self.module.__name__}")
@@ -60,6 +100,15 @@ class AutoModulo:
             raise e
 
     def _instantiate_class(self):
+        """
+        Instancia automaticamente a classe encontrada no módulo.
+        
+        Procura por classes no módulo importado e instancia a primeira classe
+        que pertence ao módulo (não importada de outro lugar).
+        
+        Returns:
+            object | None: Instância da classe ou None se não encontrar
+        """
         try:
             self._import_module()
             classes = inspect.getmembers(self.module, inspect.isclass)

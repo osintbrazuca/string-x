@@ -1,3 +1,10 @@
+"""
+Módulo de formatação e codificação de strings.
+
+Este módulo contém a classe Format que fornece diversos métodos utilitários
+para formatação, codificação, decodificação e geração de hashes de strings.
+É utilizado para processar e transformar dados durante a execução de comandos.
+"""
 from random import Random
 import urllib.parse
 import re
@@ -8,41 +15,18 @@ import yaml
 
 class Format:
     """
-    A utility class for various string formatting and encoding operations.
+    Classe utilitária para diversas operações de formatação e codificação de strings.
+
+    Esta classe fornece métodos estáticos para limpeza de strings, codificação/decodificação
+    base64, geração de hashes e outras operações de transformação de dados.
 
     Methods:
-        clear_value(value: str) -> str:
-            Removes leading and trailing whitespace and tabs, newlines, and carriage returns from the string.
-
-        decode64(value: str) -> str:
-            Decodes a base64 encoded string.
-
-        encode64(value: str) -> str:
-            Encodes a string into base64.
-
-        sha1(value: str) -> str:
-            Generates a SHA-1 hash of the string.
-
-        sha256(value: str) -> str:
-            Generates a SHA-256 hash of the string.
-
-        encodehex(value: str) -> str:
-            Encodes a string into its hexadecimal representation.
-
-        decodehex(value: str) -> str:
-            Decodes a hexadecimal string back to its original string.
-
-        md5(value: str) -> str:
-            Generates an MD5 hash of the string.
-
-        json(value: str):
-            Parses a YAML string into a Python object.
-
-        regex(value: str, regex: str) -> str:
-            Finds all occurrences of a regex pattern in the string.
-
-        parse_urlencode(url: str) -> str:
-            Encodes a URL string using URL encoding.
+        clear_value(value: str) -> str: Remove espaços e caracteres de quebra de linha
+        decode64(value: str) -> str: Decodifica string base64
+        encode64(value: str) -> str: Codifica string em base64
+        sha1(value: str) -> str: Gera hash SHA-1 da string
+        sha256(value: str) -> str: Gera hash SHA-256 da string
+        encodehex(value: str) -> str: Codifica string em representação hexadecimal
     """
 
     @staticmethod
@@ -119,5 +103,5 @@ class Format:
             encode =  urllib.parse.urlencode(url)
             if encode:
                 return encode
-        return str()     
+        return str()
 
