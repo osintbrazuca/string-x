@@ -24,9 +24,8 @@ class FileLocal:
     def save_value(self, value: str, file: str, mode: str = 'a+'):
         if value and file:
             try:
-                data_return = open(file, mode)
-                data_return.writelines(value)
-                data_return.close()
+                with open(file, mode) as data_return:
+                    data_return.writelines(value)
             except Exception:
                 self._cli.console.print_exception(max_frames=3)
 
