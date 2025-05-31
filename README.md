@@ -207,9 +207,9 @@ usage: strx [-h] [-list file] -str cmd [-out file] [-pipe cmd] [-verbose]
                                   ░                    ░         ░    ░  
                                   ░                                      
                                 
-                        String-X: Ferramenta de Automatização para Manipulação de Strings
+                          String-X: Automation Tool for String Manipulation
 
-Parâmetros disponíveis:
+options:
              -h, --help             Exibe esta mensagem de ajuda
              -list, -l file         Arquivo com strings para execução
              -str, -st cmd          Template de comando com placeholder {STRING}
