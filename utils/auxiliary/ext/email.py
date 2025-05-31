@@ -19,21 +19,28 @@ class AuxRegexEmail(BaseModule):
 
         # Define informações de meta informalções do módulo
         self.meta.update({
-            "name": "Extractor",
+            "name": "Extractor de Emails",
             "description": "Extrai emails do texto fornecedido",
             "author": "MrCl0wn",
-            "type":""
+            "type":"extractor"
         })
 
         # Define opções requeridas para este módulo
         self.options = {
             "data": str(),
-            "regex_email": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+            "regex": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
         }
 
     def run(self):
-        if (target_value := self.options.get("data")) and (regex_email := self.options.get("regex_email")): 
-            regex_email = re.compile(regex_email,re.IGNORECASE)
-            if regex_result_list := set(re.findall(regex_email, target_value)):
-                for email in regex_result_list:
-                    self.set_result(email)
+        """
+        Executa o processo de extração de emails usando os dados fornecidos e o padrão regex.
+        Verifica se os dados e o padrão regex estão disponíveis, compila o padrão regex e extrai os emails encontrados.
+        Se emails forem encontrados, eles são armazenados como resultados do módulo.
+        """
+
+        # Verifica se há dados para processar
+        if (target_value := self.options.get("data")) and (regex_data := self.options.get("regex")): 
+            regex_data = re.compile(regex_data,re.IGNORECASE)
+            if regex_result_list := set(re.findall(regex_data, target_value)):
+                for value_regex in regex_result_list:
+                    self.set_result(value_regex)
