@@ -1,4 +1,27 @@
 #!/usr/bin/python
+"""
+String-X (STRX) - Ferramenta de automatização de comandos
+
+Este módulo é o ponto de entrada principal da ferramenta String-X, uma ferramenta
+de automatização rápida e personalizável desenvolvida para auxiliar analistas em
+diversas tarefas que dizem respeito à manipulação de strings em linhas de comando.
+
+A ferramenta reconhece fontes de dados, seja por meio do resultado de um cat,
+script scan ou request via curl. Os dados coletados da source são tratados como
+string e manipulados via parâmetro reservado da ferramenta.
+
+Tipos de módulos suportados:
+- output (OUT): Módulos para formatação de saída
+- connection (CON): Módulos para estabelecer conexões  
+- extractor (EXT): Módulos para extrair dados específicos
+- collector (CLC): Módulos para coletar e agregar informações
+
+Author: Cleiton Pinheiro aka MrCl0wn
+Email: mrcl0wnlab[@]gmail.com
+License: MIT
+Version: 0.1
+"""
+
 import os
 import sys
 import signal
@@ -10,13 +33,6 @@ from core.thread_process import ThreadProcess
 
 from core.style_cli import StyleCli, RichArgumentParser, RawDescriptionHelpFormatter
 from core.auto_module import AutoModulo
-
-"""
-output      → OUT
-connection  → CON
-extractor   → EXT
-collector   → CLC
-"""
 
 
 __author__ = "Cleiton Pinheiro aka MrCl0wn"
@@ -33,6 +49,20 @@ __git__ = [
 
 
 def quit_process(signal, frame) -> None:
+    """
+    Manipula a interrupção do processo por sinal SIGINT (Ctrl+C).
+    
+    Esta função é chamada quando o usuário pressiona Ctrl+C, permitindo
+    uma saída limpa do programa com informações sobre o último arquivo
+    de saída e o último valor processado.
+    
+    Args:
+        signal: O sinal recebido
+        frame: O frame atual de execução
+        
+    Returns:
+        None
+    """
     print("")
     CLI.console.log(f" [!] Saindo...")
     CLI.console.log(f" [!] File output: {setting.LOG_FILE_OUTPUT}")
@@ -42,8 +72,22 @@ def quit_process(signal, frame) -> None:
 
 def stdin_get_list() -> list:
     """
-        ref:
-            https://stackoverflow.com/a/3763257
+    Obtém uma lista de strings do stdin (entrada padrão).
+    
+    Esta função verifica se há dados disponíveis no stdin sem bloquear
+    a execução do programa. É utilizada para permitir que o programa
+    aceite dados via pipe (|) de outros comandos.
+    
+    Returns:
+        list: Lista de strings lidas do stdin, ou None se não houver dados
+        
+    Raises:
+        KeyboardInterrupt: Quando o usuário interrompe a execução
+        NameError: Quando há erro de nome de variável
+        IOError: Quando há erro de entrada/saída
+        
+    Reference:
+        https://stackoverflow.com/a/3763257
     """
     try:
         if select.select([sys.stdin], [], [], 0.0)[0]:
@@ -62,6 +106,15 @@ def stdin_get_list() -> list:
 
 
 def open_file(filename: str) -> list[str]:
+    """
+    Abre um arquivo e retorna seu conteúdo como lista de strings.
+    
+    Args:
+        filename (str): Caminho para o arquivo a ser aberto
+        
+    Returns:
+        list[str]: Lista com as linhas do arquivo ou None se houver erro
+    """
     if filename:
         try:
             txt_line, _ = FILE.open_file(filename, 'r')
@@ -72,6 +125,22 @@ def open_file(filename: str) -> list[str]:
 
 
 def main(target_str_list: list, template_str: str) -> None:
+    """
+    Função principal que executa o processamento das strings de entrada.
+    
+    Esta função recebe uma lista de strings de entrada e um template de comando,
+    e executa o processamento usando threads para melhor performance.
+    
+    Args:
+        target_str_list (list): Lista de strings para processar
+        template_str (str): Template de comando para executar
+        
+    Returns:
+        None
+        
+    Raises:
+        BrokenPipeError: Quando há erro de pipe quebrado
+    """
     if target_str_list and template_str:
         try:
             if list is type(target_str_list):

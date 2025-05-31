@@ -1,3 +1,20 @@
+"""
+Módulo de configuração global para String-X.
+
+Este módulo contém todas as configurações globais utilizadas pela ferramenta String-X,
+incluindo configurações de logs, banners e threads.
+
+Variables:
+    TIME (str): Timestamp atual no formato DD-MM-YYYY-HH para nomenclatura de arquivos
+    LOG_DIRECTORY (str): Diretório onde serão salvos os arquivos de log
+    LOG_FILE_LAST (str): Nome do arquivo que armazena o último valor processado
+    LOG_FILE_OUTPUT (str): Nome do arquivo de saída com timestamp
+    BANNER (AsciiBanner): Instância da classe de banners ASCII
+    BANNER_DEFAULT (str): Banner padrão a ser exibido
+    BANNER_RANDOM (bool): Flag para exibir banner aleatório
+    BANNER_HELP (str): Banner que será exibido na ajuda
+    THREAD_MAX (int): Número máximo de threads permitidas
+"""
 from datetime import datetime
 from core.banner.asciiart import AsciiBanner
 
